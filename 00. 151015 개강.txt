@@ -1,0 +1,27 @@
+VMmare KEY : CV512-FAW91-085NP-DMXQX-QLHAF
+
+큰 그림을 그릴 수 있는 눈
+
+OS : HW 제어/관리
+
+O S
+----
+H W
+
+OS(SW)를 통해서 HW를 제어 하고 관리
+
+OS SW : x86(32bit - 4G) / x64(64bit - 엄청큼)
+Server HW : 서비스 제공
+x86 (범용서버 - 범용 OS 설치가능)
+	Window	: 클라이언트 서비스 제어
+	Linux	: 대용량 서비스
+Non-x86 (전용서버)
+	UNIX 
+
+Client OS : 서비스 요청
+
+
+	
+WINDOWs 역사	| (커널의 통합)	5.x	| 6.x -->
+95 98 Me	| 2000 pro	| XP	| VISTA	 | win7(VISTAR2) |win 8	 | 8.1
+NT2,3,4		| 2000 Server	| 2003	| 2008	 | 2008R2	 | 20012 | 2012R2
