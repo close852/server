@@ -1,0 +1,87 @@
+2008 부터 바뀐 window os 의 구조
+GUI shell
+----
+MIN Shell
+----
+CORE
+
+2008 R2 까지 는 모드 변경불가
+2012부터 모드 변경 가능함.
+
+
+
+
+2008
+	Server Standard
+	Server Enterprise
+	Server DataCenter
+
+2012
+	Server Standard
+	Server DataCenter
+
+	## 서버 최초 설치시 필수사항
+0.VMware Tools 설치(선택)
+1. host명 setting
+2. ip setting
+3. 최신 업데이트 반영
+4. 백업
+-------------------------
+@ Host명 작성법(15자리 이하)
+2F-HP-IIS-1	: 2층 HP서버 IIS 서비스 제공하는 첫번째 서버
+2F-Dell-AD-3	: 2층 Dell서버 AD 서비스 제공하는 세번째 서버
+
+IIS-01
+DC-02
+(서비스 제공시)
+	share
+	File
+
+@ IP setting
+
+netsh interface
+
+
+---------------------
+2012 기본셋팅
+NIC 티밍 필수!(Ether-Channel)
+
+
+
+
+2008 DNS 서버 설치
+
+역할(사용자에게 제공[서비스]) / 기능(내가 사용할 것)
+
+윈도우서버 password 정책(무쓸모)
+쉬운 패스워드를 만들게 하세요
+
+
+Fully Qualified Domain Name
+FQDL 정규화 된 도메인 이름
+
+
+Client 가 DNS를 통해서 서버로 접속하는 모습
+www.naver.com.
+
+client -> DNS : com으로 가세요
+client -> com : naver로 가세요.
+client -> naver : ip를 알려준다.
+client -> naver ip : 접속 성공
+
+
+
+localhost ---> DNS서버로 전송	(www.naver.com?)
+localhost ---> com으로 전송 	(www.naver.com?)
+localhost ---> naver로 전송 	(www.naver.com?) 찾았다!
+
+캐싱(기억시킨다) DNS도 / Client도 기억한다.
+
+서비스를 제공하는 DNS Web 서버가 캐싱 시간을 정해준다.
+TTL 얼마동안 캐시될것인지를 가르킴.
+관리 잘해야 한다.[IP 변경됬는데, 못찾아 올 수있다.]
+
+
+ipconfig /displaydns	(캐싱된거 보기)
+ipconfig /flushdns	(캐싱된 거 지우기)
+nslookup		(ip 확인)
