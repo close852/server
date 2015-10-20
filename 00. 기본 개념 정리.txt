@@ -7,9 +7,19 @@ Thin-provisioning :동적으로 서비스를 제공해서 클라이언트가 확보한 공간을 마치 진
  마치 사용자는 많은 공간(가상 할당)을 사용 하고 있는 것처럼 보여준다. 
  그러다가 실질적인 용량 추가 요청이 있을 시 조금씩 용량을 늘려주게 됨으로써 스토리지 활용률을 높이는 것이다.
 
-
-
+Directory Service?
+EXPLAIN (옛날에는 DAP을 썼는데 이제는 경량화된 LDAP을 쓴다. 
+ 그런데 LDAP이 DNS 조회를 기반으로 하기 때문에 Directory Service는 DNS가 필요하다.)
 
 명령어 
 echo %systemroot%
 echo %windir%
+
+
+	DC(Domain Controller) 이중화가 필요한 이유?
+	- 서비스를 제공할 때, DC가 한개면 고장 날 때 서비스가 불가하다.
+	 때문에 두개를 넣고 이중화 해야한다. 또한 추가로 DC를 넣는 것은 부하를 분산하기 위해 필요하다.
+
+	GC(Global Catalog) 
+	- 자신이 위치한 Domain만 알면 된다. [필수설치 후 선택설치] 결론 : 찾아내면 다 설치해야 한다.
+

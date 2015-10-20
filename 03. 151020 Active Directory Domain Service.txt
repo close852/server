@@ -1,0 +1,106 @@
+Active Directory Domain Service - ADDS - AD
+
+Directory Service? 전화번호부 책
+EXPLAIN (옛날에는 DAP을 썼는데 이제는 경량화된 LDAP을 쓴다. 
+ 그런데 LDAP이 DNS 조회를 기반으로 하기 때문에 Directory Service는 DNS가 필요하다.)
+
+ -DAP를 이용해 사용 [속도가 거지 같다]
+  ㄴLDAP [Lite Domain Access Protocol] - DNS가 필요하다.
+	[DNS 조회를 기반으로 하기 때문에]
+도메인 컨트롤러 간에 동기화
+
+
+.중앙집중관리가 가능하다.
+.관리지가 자원들을 목록화 해주면 사용자는 가져다 쓰면된다.
+
+SSO[한번만 인증 받으면, 나머지 작업들은 패스 - 간편한 서비스 이용]
+
+
+
+
+
+		### 오전 2교시
+회사 이름 : 성남
+domain: SN.com (회사명; 주소)
+Organizational Unit : OU(부서; 조직단위)
+Domain Controller : Auth ( 경비원; 인증) - 추가 DC(최소 두개가 기본)
+ ㄴ 최초 두개를 넣는것은, DC 이중화 개념으로 넣는다 / 추가 DC는 부하를 분산시키는 기능
+Global Catalog : 안내데스크
+Tree : 트리구조를 이룰 때, 하위단에 다른이름을 명시 [삼성의 에버랜드]
+Forest : 개념적인 영역[ㅇㅇ그룹]
+
+
+
+		### 오전 3교시
+	설치 : dcpromo(2008이전) 
+
+
+기존 포리스트에 DC 추가 - 기존 도메인 컨트롤러 추가
+
+새 포리스트 새도메인
+FQDN -> Server.vm
+
+
+Net BIOS 이름 [제일 앞에 있는 문자열 FQDN]
+
+DC가 가지고 있는 GC가 자신의 모든 정보를 가지고 있어야한다.
+하지만, 동기화된 DC의 GC정보도 최소한의 정보는 알고 있어야 한다.[복제]
+
+DC복제하는데, 포리스트 기능수준을 도메인들끼리 복제할 때
+어떤 수준으로 복제할 것이니?? [동기화 된 친구들 중에서 제일 수준이 낮은것을 기준으로]
+
+
+2008 설정
+
+1. 포리스트 설정
+2. FQDN 설정(Server.vm) Server가 NetBIOS
+3. 포리스트 기능 수준 설정
+4. 컨트롤러 옵션 설정
+5. 데이터베이스 / 로그파일 / SYSVOL 설정
+6. 암호 설정(복원모드)
+7. 완료
+
+
+
+AD 사용자 및 컴퓨터
+ - Domain Controller
+
+AD 도메인 및 트러스트
+ [자식도메인이 있으면 한 레벤 하위에 나타날 것]
+
+
+
+		### 오후 2교시
+UPN / Net BiOS 로그온 비교해서 살펴보기
+Net Bios : 없어질 방식 IPv6에서 못쓰는 기능
+UPN : A@naver.com | A@naver.net [같은계정이더라도 도메인으로 구별 가능]
+
+
+
+S2의 Active Directory 도메인 서비스 구성 마법사
+
+이 서버를 도메인 컨트롤러로 승격
+기존 포트리스에 새 도메인을 추가 (자식 생성)
+
+부모 도메인 이름 : Server.vm
+새 도매인 이름 : Ulsan
+
+
+
+자격증명 : server.vm의 도메인 관리자
+administrator@server.vm
+dkagh1234.
+
+net user administrator *
+
+
+클라이언트  JOIN 하기
+
+
+시스템 속성 - 변경 - 도메인 
+CL1 = server.vm
+CL2 = ulsan.server.vm
+
+
+S1에다가 사용자 test - 최지우 생성
+S1에다가 사용자 test - 피카츄 생성
