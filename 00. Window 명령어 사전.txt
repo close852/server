@@ -8,3 +8,6 @@ nslookup		: (dns 에 캐싱된 ip 확인)
 
 dxdiag			: directX 정보확인
 ping 			: ICMP(ARP)날려서 연결상태 확인
+
+net user administrator *: 관리자 암호 변경
+dcpromo			: Active Directory 설치
