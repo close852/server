@@ -1,0 +1,180 @@
+DNS영역은 DNS의 레코드가 포함된 DNS 네임 스페이스의 구체적인 부분
+
+영역 유형
+ -정방향 조회 영역
+ -역방향 조회 영역
+
+FQDN -> IP[정방향 조회]
+IP -> FQDN[역방향 조회]
+
+정방향 조회 DNS 레코드
+-A : 주소[IP]/호스트 레코드; 정규화된 도메인 이름/호스트명(FQDN)을 IPv4에 연결
+
+-AAAA: 주소 레코드; 호스트를 IPv6에 연결
+
+-CNAME: 별칭 레코드; 실제 호스트명과 연결되는 별칭,별명
+	s : s1.naver.com -> www.naver.com 이렇게 바꿔주는 거
+
+-MX : 메일 교환 레코드; 메일서버(사서함)에 도달할 수 있는 라우팅정보(메일서버)를 제공
+	s : 메일서버가 있어도 DNS에서 MX 넣어주지 않으면 반송됨.
+
+-NS : 영역을 풀이할 수 있는 DNS서버의 목록을 가리킴
+	s : DNS 서버의 목록을 가지고 있다.[서비스를 제공해 줄려면 필요하기 때문]
+
+-PTR : 포인터 리소스 레코드; 다른 DNS레코드를 가리킴, 
+       역방향 조회에서 A레코드를 가리킬때 사용
+	s : FQDN은 정방향 조회 안에 들어 있다.
+
+-SOA : 권한시작 레코드; 영역의 시작을 지정하고 권한이 있는 서버를 가리킴.
+	start of authority
+	영역의 원래 이름을 나타내며 영역에 대한 정보의 주 소스인 서버의 이름을 포함하고, 
+	영역의 다른 기본 속성을 나타낸다.
+
+-SRV : 서비스 위치 레코드; 비슷한 TCP/IP 서비스를 제공하는 다수의 서버 위치 정보를 제공 
+	어떤 서비스가 어떤 서버에 위치 하고 있는지 알려줌.
+
+
+역방향 레코드에 FQDN이 들어있다.
+
+
+		###오전 3교시
+
+정뱡향 조회 영역
+naver.com
+새 호스트 	s1.naver.com
+새 별칭 	www	| 대상호스트 s1.naver.com
+
+
+KT DNS
+ : 168.126.63.1
+
+nslookup
+> server 168.126.63.1 [ KT DNS 서버에다 묻겠다]
+
+C:\Users\Administrator>nslookup
+기본 서버:  localhost
+Address:  127.0.0.1
+
+> server 168.126.63.1
+기본 서버:  kns.kornet.net
+Address:  168.126.63.1
+
+> www.google.com
+서버:    kns.kornet.net
+Address:  168.126.63.1
+
+권한 없는 응답:
+이름:    www.google.com
+Addresses:  2404:6800:4004:810::1013
+          173.194.126.243
+          173.194.126.242
+          173.194.126.244
+          173.194.126.240
+          173.194.126.241
+
+
+
+	>>> S2(192.168.100.102)에서 조회
+
+C:\>nslookup
+기본 서버:  UnKnown
+Address:  192.168.100.101
+
+> s1.naver.com
+서버:    UnKnown
+Address:  192.168.100.101
+
+이름:    s1.naver.com
+Address:  192.168.100.101
+
+[cname 설정 안됬을 때]
+> www.naver.com
+서버:    UnKnown
+Address:  192.168.100.101
+*** UnKnown이(가) www.naver.com을(를) 찾을 수 없습니다. Non-existent domain
+
+[cname 설정 됬을 때]
+> www.naver.com
+서버:    UnKnown
+Address:  192.168.100.101
+
+이름:    s1.naver.com
+Address:  192.168.100.101
+Aliases:  www.naver.com
+
+
+	S1 : www.naver.com 생성
+새 호스트 -> 이름 www / IP 173.194.126.242
+
+	S1 : blog.naver.com 생성
+새 호스트 -> 이름 blog / IP 180.70.93.11
+
+> blog.daum.net
+서버:    kns.kornet.net
+Address:  168.126.63.1
+
+권한 없는 응답:
+DNS request timed out.
+    timeout was 2 seconds.
+이름:    blog.daum.net
+Addresses:  180.70.134.40
+          180.70.93.11
+
+
+CNAME -> CNAME -> A 이런식으로 설계 안한다.
+> news.naver.com
+서버:    UnKnown
+Address:  192.168.100.101
+
+이름:    www.naver.com
+Address:  173.194.126.242
+Aliases:  news.naver.com
+          cafe.naver.com
+
+
+
+====================================================
+
+	#오후 2교시
+
+Root DNS 목록이 담겨있는 문서
+Root Hint
+
+ns record 값
+com / net / org 등등의 것을 알고있다!
+
+재귀쿼리 반복쿼리
+
+재귀쿼리 : 무조건 답을 줘야 한다.
+
+Client --재귀쿼리--> DNS ---반복쿼리(Root Hint) ----> Root DNS
+
+[재귀쿼리 영역]
+Client -> 연결된 DNS에 물어보는 것
+
+[반복쿼리 영역] - Root Hint 써서 Root DNS에게 가면 반복쿼리
+1.   com에 대한 ns record 값 알려준다.
+2. naver에 대한 ns record 값 알려준다.
+
+계층적 구조의 DB
+	Root DNS
+
+- Top Level Domain
+
+- Second Level Domain
+
+
+
+네임스페이스 [FQDN]
+
+ * 전달자 사용(forworder)
+	1. 내부와 외부의 단절 [전달자를 통해 퀴리를 전달한다 .중간의 DNS는 깡통]
+	2. 쿼리의 응답속도를 단축시키기 위해서. 내가 반복퀴리하는 것 보다 ISP의 캐시를 가져오는게 더빠르니까.
+
+
+조건부 전달자 : 도메인의 이름을 조건으로 사용하여 이름풀이 요청을 처리
+
+
+
+
+set type=sua
