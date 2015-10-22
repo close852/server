@@ -39,7 +39,7 @@ DC-02
 
 @ IP setting
 
-netsh interface
+*netsh interface
 
 
 ---------------------
@@ -47,13 +47,11 @@ netsh interface
 NIC 티밍 필수!(Ether-Channel)
 
 
-
-
 2008 DNS 서버 설치
 
 역할(사용자에게 제공[서비스]) / 기능(내가 사용할 것)
 
-윈도우서버 password 정책(무쓸모)
+윈도우서버 password 정책(Client가 안지켜 주면 무쓸모)
 쉬운 패스워드를 만들게 하세요
 
 

@@ -1,0 +1,10 @@
+cd\			: 최상위로 이동
+dir			: 현재 디렉토리 파일 보기
+
+ipconfig /all		: 모든 정보보기
+ipconfig /displaydns	: (캐싱된 거 보기)
+ipconfig /flushdns	: (캐싱된 거 지우기)
+nslookup		: (dns 에 캐싱된 ip 확인)
+
+dxdiag			: directX 정보확인
+ping 			: ICMP(ARP)날려서 연결상태 확인
