@@ -11,3 +11,27 @@ ping 			: ICMP(ARP)날려서 연결상태 확인
 
 net user administrator *: 관리자 암호 변경
 dcpromo			: Active Directory 설치
+net share		: 공유 폴더 확인
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

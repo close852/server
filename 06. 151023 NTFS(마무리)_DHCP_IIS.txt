@@ -1,0 +1,230 @@
+
+
+$표시된 친구들은 안보이고 접근 불가.
+
+C:\> net share
+
+공유 이름   리소스                        설명
+
+---------------------------------------------------------------
+C$           C:\                             기본 공유
+E$           E:\                             기본 공유
+IPC$                                         원격 IPC
+ADMIN$       C:\Windows                      원격 관리
+NETLOGON     C:\Windows\SYSVOL\sysvol\Server.vm\SCRIPTS
+                                             Logon server share
+SYSVOL       C:\Windows\SYSVOL\sysvol        Logon server share
+퍼미션 테스트2
+             C:\공유 폴더\퍼미션 테스트2
+명령을 잘 실행했습니다.
+
+
+http://www.delmaster.net/237
+기본적으로 공유되어 있는 폴더
+ADMIN$
+
+컴퓨터의 원격 관리를 하는 동안 사용된다. 
+경로는 윈도우가 설치된 폴더.
+Administrators, Backup Operators, Server Operators 그룹만 접근 가능
+원격 관리를 하는동안 사용 된다.
+공유된 리소스를 확인할때 사용.
+로컬과 원격 컴퓨터의 통신 채널 역할을 수행
+통신을 할때 기본적으로 필요한 항목.
+
+NETLOGON
+
+도메인의 로그온 요청을 처리할때 사용.
+사용자가 로그온에 성공하면 해당 사용자에게 필요한 프로필과 실행할 스크립트 정보를 받는 용도.
+모든 DC에 필요한 공유.
+
+SYSVOL
+클라이언트의 그룹정책 정보와 스크립트 저장 용도로 사용
+드라이브명$
+컴퓨터의 원격관리를 위해 사용.
+Administrators, Backup Operators, Server Operators 그룹만 접근 가능
+- Windows 버전에 따라 Server Operators는 접근 안됨.
+
+PRINT$
+공유 프린터를 지원하기 위함.
+공유 프린터를 생성할때마다 해당 드라이버를 두고 클라이언트가 접근할때 다운로드할 수 있게 지원.
+
+
+
+
+#######################################################################################################
+http://www.delmaster.net/68
+기본 공유 / 관리 공유 제거
+
+레지스트리편집기 실행(시작->실행->regedit) 
+
+HKEY_LOCAL_MACHINE → SYSTEM → CurrentControlSet → Services  ->Lanmanserver의 parameters
+- parameters 클릭 후 오른쪽 윈도우 영역에서 마우스 오른쪽버튼을 눌러 새로만들기의 DWORD값을 선택합니다.
+- 새로 추가될 항목이 생기면 각 OS에 맞는 이름을 아래를 참고하여 입력하고 레지스트리 편집기를 닫음.
+
+  AutoShareWks 
+: Windows XP/Windows 2000 Pro/Windows Vista/Windows 7/8/8.1 인 경우
+
+  AutoShareServer 
+: Windows 2000/2003/2008/2012 Server 인 경우
+- 위와 같이 설정이 완료되면 시스템을 다시시작(Reboot)
+
+
+
+#######################################################################################################
+DHCP [설치 / 임대 / 예약 / 필터]
+
+
+(클라이언트의 구성을 동적으로 바꿔준다.)
+DHCP
+ip 주세요 -> Client 는 Ip가 없어서 수신 못해요
+[Dynamic Host Configuration Protocol]
+<최초>
+1. DHCP Discover [Client Host명 / Mac-address] IP 주세요!(Client -> Server) Broadcast 통신
+2. DHCP Offer	 [IP /SM / GW / DNS ] 			 (Server -> Client) Broadcast 통신 
+		  자신의 IP / 임대기간 Default 8일 CL1 mac 주소
+3. DHCP Request	 그거 쓸게!!				 (Client -> Server) Broadcast 통신
+4. DHCP Ack						 (Server -> Client) Broadcast 통신
+
+
+-----------------------------------------------------------------------------------------
+
+임대 갱신 조건 : 
+1. 임대기간의   50%가 지났을 때
+2. 임대기간의 87.5%가 지났을 때 (실패시, 계속 쓴다.)
+	ㄴ 실제로, 87.5%가 지나면,쓰면서 Broadcast 통신을 시도한다.
+
+<갱신>
+1. DHCP Request	[lease 한 IP]	(Client -> Server) Unicast 통신
+2. DHCP Ack	[임대 허용]	(Server -> Client) Unicast 통신
+2-1. DHCP NAK	[임대 불가]	(Server -> Client) Unicast 통신
+ ㄴ DHCP IP 바뀔때 , DHCP 고장 
+
+DHCP는 고정아이피를 가져야만 서비스가 가능하다 (임대받고 있다면, 서비스 불가)
+
+IGMP - Multicast
+
+
+
+IP : 192.168.0.0/24
+GW : 192.168.0.2
+[무조건 OS는 GW로 보낸다.
+DNS : 168.126.63.1
+
+s2에서 DHCP 역할 추가
+ ㄴAD 없이
+
+DHCP 원격으로 권한부여 해야한다.
+s1 들어가서 기능 - 원격 - DHCP 도구 설치
+ 첫번째 권한의 관리자만 가능하다.
+ DHCP에서 권한 부여
+ 그후, s2 권한 추가.
+
+
+
+s2 s2.ulsan.server.vm 우클릭 모든작업 - 다시시작 (reboot)
+ipv4 새범위
+Server 
+
+start ip : 192.168.100.50
+end ip	 : 192.168.100.150
+
+length : 24
+필요에 따라 서브네팅 할 것.
+제외 IP / 임대 기간 / GW IP
+
+
+DHCP 고정IP 바꿔도 상관없다!
+품질이 조금 떨어질 수있지만, 서비스에는 이상 없다.
+
+
+컴퓨터가 켜지면 DHCP 갱신시도한다.
+DHCP DISCOVER는 사용자에 대한것이 아니고, 컴퓨터 통신에 대한 문제라서 로그온가 상관 없다.
+
+
+예약 : 예약은 계속 같은 IP를 준다.(관리자가 회수 가능)
+
+[예약 시, mac-address 확인 -> ping 날리고 arp -a / getmac / 고유ID 확인 / 우클릭 예약
+
+C:\>getmac  /s cl2.ulsan.server.vm /v
+
+C:\>getmac /v
+
+연결 이름       네트워크 어댑터 물리적 주소         전송 이름
+
+=============== =============== =================== ============================
+==============================
+로컬 영역 연결  Realtek PCIe GB D0-27-88-42-BE-96   \Device\Tcpip_{6F253635-4F1D
+-4CEC-916C-043FBBD784E9}
+VMware Network  VMware Virtual  00-50-56-C0-00-01   \Device\Tcpip_{0230E4FF-25F4
+-4BF1-92FF-23A929680B5A}
+VMware Network  VMware Virtual  00-50-56-C0-00-08   \Device\Tcpip_{AF86D144-E552
+-4428-BF13-CCF9D422DF51}
+
+
+
+
+C:\Users\Administrator>arp -a 192.168.100.51
+
+인터페이스: 192.168.100.1 --- 0x11
+  인터넷 주소           물리적 주소           유형
+  192.168.100.51        00-0c-29-25-fc-cb     동적
+
+S2
+예약 - 새예약
+mac 주소는 getmac 이랑 arp -a로 알 수있다.
+
+에약 하더라도 갱신해야 최신화 된다.
+mac주소로 ip setting 
+ip를 주는게 아니구 , 장비별 mac을 받아서 예약을 걸것. 보관을 잘 해야 겠군?
+
+필터
+MAC 주소.... 노다가 ;;
+방문자		-이름	-디바이스
+경영지원부	-최지우	-PC
+
+방문자 처리
+	임시20151023	-박철민	-손님
+
+휴직자 처리
+	거부해 놓을 것.
+
+
+
+
+==========================================================================================
+
+IIS (웹서버 설치)
+
+S2.Ulsan.Server.vm
+Default Web Site 기본적으로 설치 되어 있음.
+
+사이트 이름
+WEB-www.server.vm
+
+실제경로
+C:\inetpub\WEB\www.server.vm
+
+호스트 이름(가상)
+www.server.vm
+
+
+
+
+http://www.microsoft.com/web/
+
+
+
+[Client]
+인터넷 정보 서비스 [Internet Information Service]
+
+관리도구 - IIS
+
+
+
+
+
+
+
+
+
+
