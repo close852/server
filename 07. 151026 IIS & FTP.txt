@@ -1,0 +1,127 @@
+s1에 가서 DNS blog.server.vm 을 생성해야 한다.
+캐싱 문제 확인할 것.(한번 접속 시도해서 실패 하면)
+
+(http://)blog.server.vm(:80) --> DNS 재귀쿼리
+---> http://192.168.100.102:80:blog.server.vm
+
+DNS 만들어야 하는 이유
+-이름풀이 해줘야 하니까
+-IP로 접근 못함.(여러개 사이트 있을 때)
+
+[Google analytics]구글 애널리틱스 가입 및 사용하기
+
+
+Active Directory 인증서 서비스
+(Nation) Public Key Infrastructure
+PKI
+=> 키쌍(개인키 , 공개키)
+
+원본데이터 - 내 개인키(내가 만든게 확실하다) + 상대 공개키(너만 봐)
+
+
+RFID : 태그값 + Password 
+
+AD CS : 설치 [인증기관]
+ADCS 사용 체크 - 인증서 기관 웹등록 체크 - 엔터프라이즈
+
+100년 줄 것. [hanabank로 테스트 만들었음]
+windows 인증 체크 됬는지 확인할 것!
+
+인증서 CRL 에서 확인(거절당한 인증서)
+
+CA 인증서(ROOT만 허용) / CA인증서 체인 ( 하위까지 인증)
+CA인증서 체인 설치할 것. 
+[관리자가 설치 한 후, 클라이언트에게 일일이 배포] -AD 없을 경우! | AD있으면, 알아서 배포 됩니다.
+
+--- 인증을 도메인에 걸어주는 거쥬?
+
+S2 - administrator@server.vm 으로 로그인
+서버인증서 - 도메인 인증서 만들기 
+일반이름 : 도메인 이름과 똑같아야 한다!!
+
+
+https - 443 port
+서버 이름 표시 필요 체크 / ssl 인증서 선택
+
+ssl 하는 방법.
+S2(SERVER\Administrator)에다가 서버인증서 - 도메인 인증서 만들기
+일반이름 : 도메인 이름과 똑같아야 한다!!(ssl.server.vm)
+온라인 인증 기관 지정 : hanabank\s1.server.vm
+이름 : ssl.server.vm-Cert [관리자가 지정한 이름]
+
+사이트 추가 -> WEB-ssl.server.vm 추가
+바인딩 종류https:// 443 port
+서버이름표시 필요 ssl 인증서 선택 - ssl.server.vm-Cert !
+
+IIS  ----->FTP 
+6 6.5| 7 7.5| 8  8.5
+3 R2 | 8  R2| 12  R2
+ 
+
+ADCS있으면 FTPS 사용가능
+	SFTP - 송수신데이터를 암호화 / FTPS는 인증서를 통해서 인증접속
+[별도의 계정으로 인증해서 접속가능]
+FTP <--IIS에서 역할 서비스 추가 FTP 서버 [FTP 서비스 / FTP 확장성] + 관리도구[관리 서비스]
+
+
+WOL 설치
+=====================================================================================================
+21 인증받고,데이터를 저장.put , store , get
+Active 모드 사용안함 [Client가 서버가 보낸 수신포트 inbound 설정을 못함] 결과 ,서비스 못해줌.
+Passive 모드 사용한다.
+
+FTP는 가상호스트 지원 안한다.
+ID : ftp.server.vm|ftpuser
+PW : dkagh1234.
+
+1. FTP 계정 ftpuser , ftpadmin
+평문이라서 , 캡쳐 가능하다.
+
+2. ftp.server.vm
+
+3. ciscoftpserver.vm
+
+0 [순서 : IIS 역할 서비스 (FTP , 관리 서비스) 설치 , 
+1 관리서비스 -> Windows 자격 증명 또는 IIS 관리자 자격 증명 - 자체 계정(체크)
+2 IIS 관리자 사용자 -> 사용자 추가 (ftpuser / ftpadmin)
+3 FTP 인증 -> 사용자 지정 공급자.. - IisManagerAuth
+4 FTP 방화벽 지원(데이터 채널 포트 범위 <1025-2024>) alert-FTP액세스 허용하도록 방화벽 설정하세요
+ ㄴ 관리도구 - 고급 보안이 포함된 Windows 방화벽 - 
+ - FTP Service Passive = 사용안함
+ [프로토콜 및 포트 1024-65535 설정 되어 있는데 동적인 포트임 항상 열려 있는것이 아니고, 서비스 이용 중일 때 랜덤 한개 열리고  , 다른포트 열고 이런 개념 좋은데, 제대로 작동안함 ] 
+ - FTP 서버(FTP 트래픽 인) = 사용안함
+ - 새규칙 ->포트-> TCP,특정로컬포트(1025-2024)-> 하고 속성에서 21포트 추가
+-----------------------------------------------------------------------------------
+5 FTP-ftp.server.vm 기능보기 - IIS 관리자 권한 - 사용자 허용 [IIS 관리자]
+6 FTP-ftp.server.vm 기능보기 - FTP 권한 부여 규칙 - 허용 규칙 추가 (admin,user - 읽기) / (admin -읽기/쓰기)
+	일반적으로 이렇게 씀. 
+
+7. ThreadPool 설정 해 줘야 한다.
+
+
+
+
+http://delmaster.net/23
+
+
+http://studyforus.tistory.com/210
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
