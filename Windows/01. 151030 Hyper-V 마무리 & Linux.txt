@@ -1,0 +1,321 @@
+install.wim 이 설치 됬을 때 환경을 제공해 주는것
+boot.wim 기반 위에서 install.wim이 설치가 된다.
+
+
+WDS 서버 만들기 / WIN7-Sysprep 만들기
+
+S2
+역할 추가 - Windows 배포 서비스 설치 
+
+win 10 boot.wim 가져오기
+VM - Removable Devices - CD/DVDS(SATA) - Setting 
+Windows 배포 서비스 
+부팅 이미지 -우클릭 - 부팅이미지 추가
+ 파일 이미지 찾아보기 - DVD드라이브 - sources 폴더 - boot.wim[D:\sources\boot.wim]
+ 확장된 크기 1631MB | OS 10.0.1024
+
+win Sysprep iso가져오기
+설치 이미지 WIN7_Sysprep.iso
+ 파일 이미지 찾아보기 - DVD드라이브 - sources 폴더 - sources - install.wim
+
+
+
+
+
+==============================
+D:\sources\[boot.wim/install.wim]
+1. 부팅 이미지 만들기 boot.wim
+2. 설치 이미지 만들기 install.wim[이름 : 클라이언트]
+3. 멀티캐스트 전송 만들기 [전송이름 : 클라이언트 배포]
+ ㄴ S2 모든작업 - 시작 | 예약된 서비스 - 임계값 설정
+4. 서버(S2) 속성 - 부팅 설정 
+
+	알 수 없는 클라이언트
+		사용자가 <Esc> 키를 누르지 않을 경우 PXE 부팅 계속하기
+	-> 설치후에는 계속 안함 체크
+5. lusrmgr.msc 사용자 - 새 사용자 추가
+WDS
+dkagh1234.
+ - Admin 쓰지말것. 노출될 위험도 있고 이렇게 않쓴다. 계정 파서 설치 할 것
+==============================
+
+
+멀티캐스트 전송 -아직안됨
+배포는 켜져 있는데 전송은 안켜져 있어서 그렇다.
+[S2 - 모든작업 - 시작]
+
+멀티캐스트 전송 우클릭 - 새 전송- 전송의 이름-"클라이언트 배포"
+자동캐스트 - 유니캐스트 처럼 동작함 ㄴㄴ
+
+예약된 캐스트 - 이미지를 요청한 클라이언트 수가다음과 같은 때 시작 [체크]
+		- 임계값 여유 있게 컴퓨터수 선택할 것.
+
+	클라이언트 배포 
+
+S2 - 속성
+
+PXE 응답
+알려지거나 알 수 없는 모든 ~.
+ 관리자 승인 체크
+
+부팅
+
+알수 없는클라이언트 [세번째]
+ 사용자가 ESC를 누르지 않을경우 PXE 부팅 계속하기
+
+네트워크 
+ 컴퓨터 대수 만큼 포트 설정해야 할 것.
+
+멀티캐스트
+ 전송설정 - Gigabit / 100MBbit 있으면 하향 평준화 된다.
+ 때문에 몇가지 구분이 생겼다.
+ [1. 끝나는 시간을 맞추겠다 /2. 환경에 따라 다른 설정하겠다.]
+
+클라이언트 배포 
+
+WDS-01 우클릭 [Power - Power on to Firmware]
+
+
+WDS-01/02에 있는 설치시 필요한 인증
+lusrmgr.msc
+사용자 - 새 사용자
+
+WDS
+dkagh1234.
+dkagh1234.
+
+s2\wds
+dkagh1234.
+
+
+WIN7 까지 AIK
+WIN8 부터 ADK
+자동설치 - AIK [Auto Install Kit] 으로 쓴다.
+
+
+Sysprep 작업.
+
+Windows 파일 복사중 [Network 속도에 대한]
+파일 설치 준비 중 - [하드웨어 속도에 대한]
+
+======================================================================================
+http://www.delmaster.net/169
+DiD
+Defense in Depth
+
+보안 수준이 올라가면, 사용자가 불편해 할 수 밖에 없다.
+
+Data
+Application
+Host
+Internet Network
+Perimeter 		포트제한 | UTM장비 L7까지 파악 가능
+Physical Security
+Policies, Procedures & Awareness
+
+
+http://kaspersky.co.kr/
+카스포스키
+파수닷컴
+eset
+비트디펜더
+
+virusbtn.com
+
+=====================================================
+Hiper-V 설치
+http://www.delmaster.net/32
+1. 가상 컴퓨터 생성 또는 기존 가상 컴퓨터의 CPU 항목에 'Virtualize Intel VT-x/EPT or AMD-V/RVI 항목 체크
+
+2. 가상 컴퓨터의 실제 파일이 있는 경로로 이동 후 '가상컴퓨터명.vmx' 파일을 메모장으로 열어 아래 내용 추가
+
+hypervisor.cpuid.v0 = "FALSE"
+S2.vmx 편집
+hypervisor.cpuid.v0 = "FALSE"
+
+		|OS |V|V |
+OS		|Hyper-V |
+H/W	-> 	|H/W	 |
+
+
+S2 
+서버관리자 - 역할 기능 추가 - Hyper-V 설치
+
+재부팅 후 -> 도구 - Hyper-V 관리자
+IP DNS 168.126.63.1 / 168.126.63.2 로 변경
+
+
+S2의 가상 스위치 관리자
+
+외부 가상 스위치 : 외부와도 통신 가능한 
+내부 가상 스위치 : 내부에서만 사용 가능한 (장비)
+
+내부와 개인 스위치의 차이 ? 
+ 실제 호스트가 연결되있음 - 내부 스위치
+
+http://www.delmaster.net/42
+가상 스위치 추가 - 
+내부(내부)			192.168.200.1	
+NAT(내부)			192.168.100.1
+HeartBeat(개인 가상)		
+외부(외부)			192.168.100.1 / 공유 - 홈 네트워크 연결vEthernet(NAT)
+							다른 네트워크 연결 허용 체크
+총 4개 
+
+DVD - IRR_SSS_X64FREV_KO-KR_DVD9 [2012 R2]
+새로 만들기 - 가상컴퓨터 - 이름 :2012-01 - 2세대 (2012 이전) - 메모리 32MB - 연결 외부
+- next - 나중에 운영체제 설치 - 마침
+2012-01 가상 컴퓨터 설정 
+	프로세서 - 하드웨어 토폴로지 사용 - RAM 1024MB 변경
+	SCSI 컨트롤러
+	ㄴDVD 드라이브 추가 - WIN10 복붙 하고 이미지 추가
+
+
+네트워크 및 공유센터 - 고급 공유 설정 변경 - 파일 및 피린터 공유  켜기[ICMP가 켜진다]
+ping 컴퓨터에서 -> Hyper-V IP[192.168.100.129]
+
+
+가상 디스크 -[가짜 하드디스크HDD]
+
+- 고정된 위치의 파일
+고정	디스크 		: 연속된 공간에 대한 보장.(성능이 좋다 | 안쓰는데 용량을 차지 한다.)
+동적 	디스크		: [장점 : 공간효율성이 좋다. | 단점 : 디스크 단편화가 발생 할 수 있다.]
+				ㄴ 서비스에 쓰지 말 것 	1세대 2008 , 2008R2 에서 쓰면 성능 뚝뚝 떨어진다.
+							(쓰는 조건이 있다. 2세대 2012~>)
+차이점 	보관용 디스크	: 
+	원본에 OS를 설치하고 차이점 보관디스크를 뿌려준다.
+	ㄴ 차이점만 차이점 보관 디스크에 저장한다.
+
+
+디스크 단편화 - > 디스크 조각모음( 모아주고 , 최대한 바깥쪽으로 모아준다. )
+
+새로만들기 - 하드디스크 
+
+VHD	: 1세대
+VHDX 	: 2시데
+
+
+
+
+=============================================================================
+
+http://www.delmaster.net/40
+
+ -SourcePath <설치할ISO파일경로>
+   -VHDPath <가상디스크파일이생성될확장자포함경로>
+   -VHDFormat <VHD|VHDX>
+   -Edition <ServerEnterprise|ServerEnterpriseCore|ServerDataCenter|ServerDataCenterCore>
+   -VHDPartitionStyle <MBR|GPT>
+   -RemoteDesktopEnable
+   -Feature <dism명령의설치명>
+       dism /online /get-feature 명령을 통해 확인
+   -Verbose
+   -VHDType <fixed|dynamic> : 기본 dynamic
+   -SizeByte <용량> : 기본 40GB
+   -ShowUI : GUI 화면 모드로 실행(권장하지않음)
+
+Vsphere - [Hiper-V]
+
+
+
+
+
+
+
+=============================================================================
+
+LINUX
+리처드 스톨만 - 자유 소프트웨어GNU
+리누스 토발즈 - 리눅스 만든사람 [이름 아리람케가 지음]
+턱스 - 래리 유윙
+
+커널 : OS의 핵심 부분
+모놀리틱(Linux) | 마이크로 (Windows)
+
+마이크로 - 모듈화 | 매니저 불안하면 커널에 영향을 미칠 수 있다. [버젼이 올라갈 때마다 좋아지고 있음]
+모놀리틱 - 컴파일 하여 하나로 묶어서 패키징 하여 실행 - 속도가 빠르다. | 기능 추가 시, 커널을 뜯어내야 한다.
+
+Linux 종류 : Open SUSE(SUSE) / 페도라(RHEL) / 우분투(데비안) / CentOS(RHEL) / 젠투 리눅스 / 데비안
+
+
+
+CUDA  : GPU로 연산[그래픽 카드]
+
+-------------------------------------------------
+MBR : (부트로더) 부팅을 도와줌 [Master Boot Record] -부트로더 부팅을 도와줌.
+
+
+레포 repo : 가져오려는 데이터가 저장된 공간.
+
+
+
+의존성 ! 
+
+
+Linux설치시 
+
+지금선택
+응용프로그램 - 이맥스  (2번 3번)
+기반 시스템 - 네트워킹 도구 [wireshark]
+
+
+
+설치 후 
+키보드 US로 접속
+로그아웃
+-------------------
+키보드 한국으로 접속 
+이전꺼 유지
+
+
+Linux VMware Tools 설치 방법에 대한 포스팅입니다.
+
+아래의 순서대로 진행하면 되겠습니다.
+
+1. VMware 상단 메뉴의 [vm] -> [install vmware tools...] 클릭
+
+2. mkdir /mnt/cdrom
+
+3. mount /dev/cdrom /mnt/cdrom
+
+3.1 cd /mnt/cdrom/
+
+4. mkdir /tmp/vmtool
+
+5. cp VMwareTools-x.x.x-yyyy.tar.gz /tmp/vmtool
+
+버전이 다를 수 있으므로 x.x.x-yyyy 부분은 상황에 따라 달라집니다.
+
+6. cd /tmp/vmtool
+
+7. tar xvzf VMwareTools-x.x.x-yyyy.tar.gz
+
+8. cd vmware-tools-distrib
+
+9. ./vmware-install.pl
+
+Would you like to enable VMware automatic kernel modules?
+[no] yes | 입력할 것.
+
+10 reboot
+
+
+---------------------------------------------------
+halt
+
+
+[master@localhost ~]$ uname -a
+Linux localhost.localdomain 2.6.32-573.el6.x86_64 #1 SMP Thu Jul 23 15:44:03 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+[master@localhost ~]$ 
+
+
+
+
+
+
+
+
+
+
+
+

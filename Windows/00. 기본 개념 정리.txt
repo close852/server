@@ -11,7 +11,7 @@ Directory Service?
 EXPLAIN (옛날에는 DAP을 썼는데 이제는 경량화된 LDAP을 쓴다. 
  그런데 LDAP이 DNS 조회를 기반으로 하기 때문에 Directory Service는 DNS가 필요하다.)
 
-명령어 
+명령어
 echo %systemroot%
 echo %windir%
 
@@ -21,5 +21,4 @@ echo %windir%
 	 때문에 두개를 넣고 이중화 해야한다. 또한 추가로 DC를 넣는 것은 부하를 분산하기 위해 필요하다.
 
 	GC(Global Catalog) 
-	- 자신이 위치한 Domain만 알면 된다. [필수설치 후 선택설치] 결론 : 찾아내면 다 설치해야 한다.
-
+	- 자신이 위치한 Domain만 알면 된다. [필수설치 후 선택설치 결론 : 찾아내면 다 설치해야 한다.
