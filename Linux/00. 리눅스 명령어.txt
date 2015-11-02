@@ -1,0 +1,61 @@
+su -	: superuser (root)
+pwd 	: 현재 경로
+exit 	: logout
+ls	: 디렉토리 
+	-a=숨겨진 파일 보기;
+	-l=목록으로 보기;
+	-F=타입 보여주기
+clear	: 화면 지우기
+vi	: vi 편집기 a = insert ; :w=저장 ; :q=종료 ; r=덮어쓰기;
+
+
+startx : x윈도우 모드
+
+uname 	-a			| 이름 묻는 명령
+
+vi /etc/grub.conf 		| vga=ask 콘솔해상도 설정
+vi /etc/inittab 		| initdefault 값 설정
+vi /etc/sysconfig/network 	| hostname 변경  [관리자 권한]
+vi /etc/sysconfig/network-scripts/ifcfg-eth0 | eth0 편집
+vi /etc/passwd			| 사용자 계정
+
+more : 세로만 이동 가능
+less : more + 가로이동
+tail : 밑에서 부터 10개 보여줌
+	-n path
+head : 위에서 부터 10개 보여줌
+	-n path
+
+|				| 파이프 -> 앞의 명령을 pipe로 전달
+ls /etc | more			| ls /etc를 more로 보여주겠다.
+
+more				| 한 화면씩 파일 내용 표시
+>				| 덮어쓰기			
+>>				| 이어 쓰기
+cat				| 데이터 내용을 보여준다.
+cd - 				| 이전경로 이동
+
+alias				| 약어
+
+ifconfig			| ipconfig
+ifup 	eth0			|
+ifdown	eth0			| down
+rpm -ivh			| rpm 파일 설치
+ln				| 하드링크
+ln -s				| 심볼릭 링크
+touch a.txt
+diff 				| 파일을 비교해서 다른 내용을보여줌
+file				| 파일의 타입
+mkdir				| 디렉토리 만들기
+	-p=부모가 없으면 만들어서 넣을것;
+	-m=기본 퍼미션 설정
+rmdir				| 디렉토리 삭제
+	-p=디렉토리만 있을 때 삭제
+rm				| 파일 삭제
+	-f 	force 묻지마라
+	-r	디렉토리까지 다 삭제
+	-i	한번 더 물어보는 친구
+
+
+
+	

@@ -1,0 +1,129 @@
+﻿    1  cls
+    2  su -
+    3  halt
+    4  uname -a
+    5  halt 0
+    6  uname -a
+    7  su -
+    8  pwd
+    9  ls
+   10  clear
+   11  su -
+   12  clear
+   13  su -
+   14  vi /etc/networks 
+   15  vi /etc/sysconfig/network  
+   16  vi /etc/sysconfig/network
+   17  su -
+   18  uname
+   19   -a
+   20  uname -a
+   21  cat /etc/sysconfig/network
+   22  cd Desktop/
+   23  echo d
+   24  echo %root%
+   25  echo qeqwew > test
+   26  ls
+   27  vi test
+   28  cat test
+   29  echo 안녕하세요 > test
+   30  cat test
+   31  cat 반가워요 >> test
+   32  echo 반가워요 >> test
+   33  cat test
+   34  echo hello > test2
+   35  cat test2
+   36  cat test
+   37  cat test >> test2
+   38  cat test2
+   39  ls
+   40  ls > test 3
+   41  ls > test3
+   42  cat test3
+   43  ls /etc
+   44  ls /etc | more
+   45  [A
+   46  ls /etc | more
+   47  cd /
+   48  pwd
+   49  cd home
+   50  ls
+   51  cd /
+   52  cd /home/
+   53  cd /etc
+   54  cd /home/master/
+   55  cd -
+   56  cd ~
+   57  /
+   58  cd /
+   59  ls
+   60  cd usr/etc/
+   61  ls
+   62  ex
+   63  ed ..
+   64  cd 
+   65  cd /etc/
+   66  cd sysconfig/
+   67  ls
+   68  cd ~
+   69  ls -l
+   70  cd Desktop/
+   71  ls -l
+   72  cd ..
+   73  ls -a
+   74  ls
+   75  ls -a
+   76  ls -l
+   77  ls -al
+   78  ls -F
+   79  cd Desktop/
+   80  ls -laF
+   81  ls -alF > home-alF
+   82  ll
+   83  lla
+   84  ll -a
+   85  alias lla=ls -al
+   86  alias lla='ls -al'
+   87  lla
+   88  ex
+   89  exit]
+   90  exit
+   91  lla
+   92  ll
+   93  alias lla='ls -la'
+   94  clear
+   95  pwd
+   96  ls -al
+   97  cls
+   98  lla
+   99  cls
+  100  lla
+  101  ls
+  102  cd -la
+  103  cd -l
+  104  ls -la
+  105  ./bashrc.
+  106  .bashrc.
+  107  ./.bashrc.
+  108  ./.bashrc
+  109  su - 
+  110  ex
+  111  quit
+  112  ls -lh
+  113  ls -l
+  114  ls -h
+  115  ls -lh
+  116  ifconfig 
+  117  ifconfig eth0
+  118  ifup eth0
+  119  su -
+  120  cd Test
+  121  cd /Test
+  122  ls
+  123  cd /home/master/Desktop/
+  124  ls
+  125  mv a.txt ./Test/
+  126  su -
+  127  history
+  128  history 151102_masterHistory.txt
+  129  history > 151102_masterHistory.txt

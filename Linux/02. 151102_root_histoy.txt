@@ -1,0 +1,250 @@
+    1  ex
+    2  end
+    3  quit
+    4  mkdir /mnt/cdrom
+    5  mount /dev/cdrom /mnt/cdrom/
+    6  mkdir /tmp/vmtool
+    7  cd /mnt/cdrom
+    8  ls -l
+    9  cp VMwareTools-9.9.0-2304977.tar.gz /tmp/vmtool/
+   10  cd /tmp/vmtool/
+   11  ls -l
+   12  tar -xvmf VMwareTools-9.9.0-2304977.tar.gz 
+   13  ls -l
+   14  ls -a
+   15  ls -la
+   16  cd ./vmware-tools-distrib/
+   17  ls -l
+   18  ./vmware-install.pl 
+   19  reboot
+   20  pwd
+   21  exit
+   22  vi /etc/grub.conf 
+   23  vi /etc/inittab 
+   24  vi /etc/grub.conf 
+   25  reboot
+   26  exit
+   27  startx
+   28  logout
+   29  vi /etc/inittab 
+   30  vi /etc/
+   31  vi /etc/inittab 
+   32  reboot
+   33  vi /etc/sysconfig/network
+   34  vi /etc/sysconfig/network-scripts/ifcfg-eth0 
+   35  init 6
+   36  ./bashrc
+   37  ./.bashrc
+   38  ex
+   39  ifup eth0
+   40  ifdown
+   41  ifdown eth0
+   42  ifup eth0
+   43  cd /home/master/D
+   44  cd /home/master/Downloads/
+   45  ls -lh
+   46  ls -l
+   47  rpm -ivh ttf-nanum-coding-2.0-2.noarch.rpm 
+   48  ++
+   49  ls
+   50  rpm -ivh bitstream-vera-sans-mono-fonts-1.10-27.fc23.noarch.rpm 
+   51  ls
+   52  rpm -ivh bitstream-vera-sans-mono-fonts-1.10-26.fc22.noarch.rpm 
+   53  rm bitstream-vera-sans-mono-fonts-1.10-26.fc22.noarch.rpm 
+   54  ls
+   55  rm bitstream-vera-sans-mono-fonts-1.10-26.fc22.noarch.rpm 
+   56  ls
+   57  rm bitstream-vera-sans-mono-fonts-1.10-27.fc23.noarch.rpm 
+   58  ls
+   59  man ls
+   60  man /?
+   61  man /?\?
+   62  man \?
+   63  info ls
+   64  cd /
+   65  cd _
+   66  cd~
+   67   cd ~
+   68  ls
+   69  echo link test > A.txt
+   70  ln A.txt AA.txt
+   71  ls -l
+   72  ls -li
+   73  echo asdjalksjdlkasjdklasjdlkasjlkd >> A.txt
+   74  ls -li
+   75  rm A.txt
+   76  cat AA.txt
+   77  ln -s AA.txt AAA.txt
+   78  ls -il
+   79  cat AAA.txt
+   80  rm AA.txt
+   81  ls -il
+   82  cat AAA.txt
+   83  echo asdasd > AA.txt
+   84  cat AAA.txt
+   85  ls
+   86  mkdir TEST
+   87  cd TEST/
+   88  ls
+   89  cat asd > A.txt
+   90  echo asdasdasd > A.txt
+   91  cat adsad asd  < A.txt
+   92  cat adsadasd  < A.txt
+   93  cat A.txt A.txt
+   94  ls
+   95  ln A.txt AA.txt
+   96  cat AA.txt
+   97  ls -il
+   98  ln -s AAA.txt A.txt
+   99  ln -s AA.txt AAA.txt
+  100  ls -li
+  101  rm AA.txt
+  102  ls 
+  103  ln A.txt AA.txt
+  104  ls -la
+  105  ls -ila
+  106  his
+  107  history
+  108  cat history > text
+  109  cat history
+  110  history > ASD.txt
+  111  cd ~
+  112  cd /
+  113  ls
+  114  ls -la
+  115  ls -a
+  116  pwd
+  117  cd ~master/Desktop
+  118  cd /home/master/Desktop/
+  119  cd ~
+  120  cd ../home/master/Desktop/
+  121  ex
+  122  touch a.txt
+  123  ls -l
+  124  touch asdasd > a.txt
+  125  ls -l
+  126  touch test2 > qw
+  127  ls
+  128  ls -l
+  129  /etc/passwd
+  130  vi /etc/passwd
+  131  cat /etc/passwd
+  132  less /etc/passwd
+  133  cat less /etc/passwd
+  134  tail /etc/passwd 
+  135  top /etc/passwd
+  136  clear
+  137  tail /etc/passwd > passwd_tail
+  138  cat passwd_tail 
+  139  cat passwd_tail 5
+  140  tail -5 /etc/passwd
+  141  more -5 /etc/passwd
+  142   
+  143  tail -5 /etc/passwd
+  144  head -5 /etc/passwd
+  145  tail -3 /etc/passwd a.txt
+  146  tail -3 /etc/passwd > a.txt
+  147  cat a.txt
+  148  ls -l | grep a.txt
+  149  tail -3 /etc/passwd > a.txt
+  150  tail -4 /etc/passwd > b.txt
+  151  diff a.txt b.txt
+  152  diff  --brief a.txt b.txt
+  153  file a.txt
+  154  ls
+  155  file gnome-terminal.desktop 
+  156  mkdir Test
+  157  ls -l
+  158  cd Test/1
+  159  cd Test/
+  160  pwed
+  161  pwde
+  162  pwd
+  163  mkdir 1
+  164  ls
+  165  cd 1
+  166  ls -a
+  167  cd../../
+  168  cd ../../
+  169  cd Test/
+  170  mkdir 1/2
+  171  ls 1
+  172  ls -l 1
+  173  ls -l 1/2
+  174  pwd
+  175  mkdir 1/2/3
+  176  ls -R
+  177  mkdirv 1/2/3/4
+  178  mkdir 1/2/3/4
+  179  ls -R 1/2/3/4
+  180  ls -R 1/2/3/
+  181  ls -R 1/2/3
+  182  ls -R 
+  183  ls -Rla
+  184  mkdir 1/2/3/4/5
+  185  mkdir 1/2/3/4/5/6
+  186  rm 1/2/3/4/5
+  187  rmdir 1/2/3/4/5
+  188  rmdir 1/2/3/4/5 1/2/3/4/5
+  189  rmdir 1/2/3/4/5 1/2/3/4/5 eq!
+  190  rmdir 1/2/3/4/5 1/2/3/4/5 
+  191  rmdir 1/2/3/4/5 1/2/3/4/5/6
+  192  rmdir 1/2/3/4/6 1/2/3/4/5/6
+  193  rmdir 1/2/3/4/5/6
+  194  rmdir 1/2/3/4/5
+  195  ls
+  196  ls -R
+  197  mkdir -p 1/2/3/4/5/6
+  198  mkdir -p 1/2/3/4/5/6/7/8/9
+  199  rmdir 1/2/3/4/5/6/7/8/9
+  200  rmdir 1/2/3/4/5/6/7/8
+  201  rmdir -p 1/2/3/4/5
+  202  touch 1/2/3/4/5/6/7/a.txt
+  203  rmdir 1/2/3/4/5/6/7
+  204  rmdir -p 1/2/3/4/5/6/7
+  205  rmdir -p 1/2/3/4/5/6
+  206  rmdir -p 7
+  207  cat /root/.bashrc | grep ali
+  208  ls
+  209  mkdir q
+  210  cd q
+  211  mkdir -p 1/2/3
+  212  touch 1/2/3/a.txt b.txt c.txt
+  213  ls -R
+  214  cd 1/2/3/
+  215  touch 1.txt 2.txt 3.txt
+  216  ls
+  217  cd ../../..
+  218  cd ../
+  219  ls
+  220  rm -rf q
+  221  ls
+  222  ls 
+  223  rm -rf 1
+  224  mkdir -p 1/2/3
+  225  cd 1/2/3
+  226  touch 1 2 3
+  227  ls
+  228  cd ../../..
+  229  ls
+  230  rm -r 1
+  231  lsa
+  232  ls
+  233  rm -rf 1
+  234  ls
+  235  uptime
+  236  ex
+  237  exit
+  238  cd /home/master/Desktop/
+  239  mv a.txt ./Test/
+  240  mv home-alF ./Test/
+  241  mv qw ./Test/
+  242  mv passwd_tail ./Test/
+  243  mv b.txt ./Test/
+  244  mv test Test/
+  245  mv test ./Test/
+  246  mv test2 ./Test/
+  247  mv asdasd Test/
+  248  mv test3 Test/
+  249  history
+  250  history > 151102Histoy.txt

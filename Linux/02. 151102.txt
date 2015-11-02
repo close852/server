@@ -1,0 +1,283 @@
+[사용자@호스트명 ~현재경로]$
+
+	#네트워크 Setting
+네트워크 연결 편집 - [자동으로 연결 x]
+
+우클릭 - 연결편집
+좌클릭 - 연결
+
+시스템 - 관리 - 소프트웨어 추가/제거 [잘 안씀]
+
+IPv4 추가
+방식 : 수동
+주소		  넷마스크	  게이트웨이
+192.168.100.201 | 255.255.255.0 | 192.168.100.2
+DNS : 168.126.63.1[KT DNS]
+
+	#grub Setting
+vi /etc/grub.conf 
+
+ kernel /vmlinuz-2.6.32-573.el6.x86_64 (vga=ask) ro root=/dev/mapper/VolGroup-lv_root rd_NO_LUKS LANG=ko_KR.UTF-8 rd_NO_MD rd_LVM_LV=VolGroup/lv_swap crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=ko rd_LVM_LV=VolGroup/lv_root rd_NO_DM rhgb quiet
+
+
+
+init  -> /etc/inittab [부팅 후 처음하는 행동] pid=1;
+
+
+	#init Setting
+# Default runlevel. The runlevels used are:
+#   0 - halt (Do NOT set initdefault to this)
+#   1 - Single user mode
+#   2 - Multiuser, without NFS (The same as 3, if you do not have networking) [NFC 뺀 모드]
+#   3 - Full multiuser mode	[기본모드]
+#   4 - unused
+#   5 - X11			[X윈도우 모드]
+#   6 - reboot (Do NOT set initdefault to this)
+#
+id:5:initdefault:
+
+
+enter
+341
+
+startx [x윈도우 모드 켜기 - x윈도우는 그냥 소프트웨어임.]
+
+Linux 서버 관리 x윈도우 쓸일 없고, Putty를 사용해서 원격으로 한다
+
+
+ctrl + alt + F1-F6 :  pseudo-tty
+
+vi /etc/sysconfig/network	호스트 명 변경
+
+NETWORKING=yes
+HOSTNAME=localhost.localdomain [FQDN server.vm]
+
+
+/etc/sysconfig/network-scripts/ifcfg-eth0 [ethX] 네트워크 편집
+
+DEVICE=eth0
+TYPE=Ethernet
+UUID=a69afaa6-a96d-4f7c-be25-10899f3bd527
+ONBOOT=no
+NM_CONTROLLED=yes
+BOOTPROTO=none
+HWADDR=00:0C:29:D3:5A:08
+IPADDR=192.168.100.201
+PREFIX=24
+GATEWAY=192.168.100.2
+DNS1=168.126.63.1
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=yes
+IPV6INIT=no
+NAME="System eth0"
+~                   
+
+
+이름 확인하는 두가지 방법
+uname -a
+cat /etc/sysconfig/network
+
+
+redirection 
+>	: 덮어쓰기
+>>	: 이어쓰기
+cat
+more
+root 경로 /
+
+[master@L1 Desktop]$ cd /
+[master@L1 /]$ pwd
+/
+
+ ** 상대경로 **
+[master@L1 /]$ cd home
+[master@L1 home]$ ls
+
+ ** 절대경로 **
+[master@L1 home]$ cd /
+[master@L1 /]$ cd /home/
+[master@L1 home]$ 
+
+cd - 이전 경로 이동
+
+[master@L1 ~]$ ls
+Desktop  Documents  Downloads  Music  Pictures  Public  Templates  Videos
+
+
+** 파일 상세정보 보기 **
+[master@L1 ~]$ ls -l
+합계 32
+소유자 | 소유 그룹 | 모든 사용자
+drwxr-xr-x. 2 master master 4096 2015-11-02 10:46 Desktop
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Documents
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Downloads
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Music
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Pictures
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Public
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Templates
+drwxr-xr-x. 2 master master 4096 2015-10-31 00:23 Videos
+
+[master@L1 ~]$ ls -lh 		| 사람이 보기 좀 더 쉽게 바꿔줌 [4.0K]
+
+** 숨김 파일 보기 **
+[master@L1 ~]$ ls -a
+.              .cache     .gnome2          .mozilla              Desktop
+..             .config    .gnote           .nautilus             Documents
+.ICEauthority  .dbus      .gnupg           .pulse                Downloads
+.abrt          .dmrc      .gstreamer-0.10  .pulse-cookie         Music
+.bash_history  .emacs     .gtk-bookmarks   .ssh                  Pictures
+.bash_logout   .esd_auth  .gvfs            .viminfo              Public
+.bash_profile  .gconf     .imsettings.log  .xsession-errors      Templates
+.bashrc        .gconfd    .local           .xsession-errors.old  Videos
+
+**파일 타입 보기 **
+[master@L1 ~]$ ls -F
+Desktop/    Downloads/  Pictures/  Templates/
+Documents/  Music/      Public/    Videos/
+
+
+
+
+alias
+[master@L1 ~]$ alias lla='ls -la'
+
+-rw-r--r--.  1 master master  124 2015-07-24 03:55 .bashrc
+ㄴ bash 가 실행 될 때 읽는 파일.
+각 사용자의 home dir 아래 .bashrc
+위치 - 홈폴더 - 숨긴 파일 보기 / 목록
+
+
+
+
+
+[master@L1 ~]$ ifup eth0
+사용자가 이 장치를 제어할수 없습니다.
+[master@L1 ~]$ su -
+암호:
+[root@L1 ~]# ifup eth0
+활성화된 연결 상태: 활성화중
+활성화된 연결 경로: /org/freedesktop/NetworkManager/ActiveConnection/1
+상태: 활성화됨
+연결이 활성화되었습니다
+
+[root@L1 ~]# ifdown eth0
+장치 상태: 3 (연결 끊겼음)
+
+[root@L1 ~]# cd /home/master/Downloads/
+[root@L1 Downloads]# rpm -ivh ttf-nanum-coding-2.0-2.noarch.rpm 
+
+
+하드링크
+
+ln A.txt AA.txt
+
+심볼릭 링크
+ln -s AA.txt AAA.txt
+====================================
+[Windows Hard Link]
+echo asdlksajd > a.txt
+mklink /h aa.txt a.txt
+====================================
+
+[root@L1 Desktop]# cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+uucp:x:10:14:uucp:/var/spool/uucp:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+gopher:x:13:30:gopher:/var/gopher:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+nobody:x:99:99:Nobody:/:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+usbmuxd:x:113:113:usbmuxd user:/:/sbin/nologin
+vcsa:x:69:69:virtual console memory owner:/dev:/sbin/nologin
+rpc:x:32:32:Rpcbind Daemon:/var/cache/rpcbind:/sbin/nologin
+rtkit:x:499:497:RealtimeKit:/proc:/sbin/nologin
+avahi-autoipd:x:170:170:Avahi IPv4LL Stack:/var/lib/avahi-autoipd:/sbin/nologin
+abrt:x:173:173::/etc/abrt:/sbin/nologin
+rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+nfsnobody:x:65534:65534:Anonymous NFS User:/var/lib/nfs:/sbin/nologin
+haldaemon:x:68:68:HAL daemon:/:/sbin/nologin
+gdm:x:42:42::/var/lib/gdm:/sbin/nologin
+ntp:x:38:38::/etc/ntp:/sbin/nologin
+apache:x:48:48:Apache:/var/www:/sbin/nologin
+saslauth:x:498:76:Saslauthd user:/var/empty/saslauth:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+pulse:x:497:496:PulseAudio System Daemon:/var/run/pulse:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+master:x:500:500::/home/master:/bin/bash
+
+
+[root@L1 Desktop]# tail -5 /etc/passwd
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+pulse:x:497:496:PulseAudio System Daemon:/var/run/pulse:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+master:x:500:500::/home/master:/bin/bash
+
+
+[root@L1 Desktop]# head -5 /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+
+
+
+diff a.txt b.txt
+
+[root@L1 Desktop]# tail -3 /etc/passwd > a.txt
+[root@L1 Desktop]# tail -4 /etc/passwd > b.txt
+[root@L1 Desktop]# diff a.txt b.txt
+0a1
+> pulse:x:497:496:PulseAudio System Daemon:/var/run/pulse:/sbin/nologin
+
+
+
+[root@L1 Desktop]# diff  --brief a.txt b.txt
+Files a.txt and b.txt differ
+
+
+
+[root@L1 Desktop]# file a.txt
+a.txt: ASCII text
+[root@L1 Desktop]# file gnome-terminal.desktop 
+gnome-terminal.desktop: a /usr/bin/env xdg-open script text executable
+
+
+
+
+
+
+[root@L1 Test]# ls -R
+.:
+1
+
+./1:
+2
+
+./1/2:
+3
+
+./1/2/3:
+
+
+mkdir 	-p 1/2/3/4/5/6/7/8/9
+	-m 기본 퍼미션 주고 만드는 것.
+마지막 파일을 만들건데, 그전에 부모가 있든 없든 상관 말고 만든다.
+
+
+
+rm -rf
+	-r 강제 
+
+
