@@ -12,6 +12,9 @@ vi	: vi 편집기 a = insert ; :w=저장 ; :q=종료 ; r=덮어쓰기;
 startx : x윈도우 모드
 
 uname 	-a			| 이름 묻는 명령
+~/.bashrc			| alias
+/home/.bashrc			| alias
+
 
 vi /etc/grub.conf 		| vga=ask 콘솔해상도 설정
 vi /etc/inittab 		| initdefault 값 설정
@@ -51,11 +54,39 @@ mkdir				| 디렉토리 만들기
 	-m=기본 퍼미션 설정
 rmdir				| 디렉토리 삭제
 	-p=디렉토리만 있을 때 삭제
+
+
+[rm의 경우 ,f가 i보다 우선순위가 높다	알림x]
 rm				| 파일 삭제
 	-f 	force 묻지마라
 	-r	디렉토리까지 다 삭제
 	-i	한번 더 물어보는 친구
 
-
-
+[cp의 경우 ,i가 f보다 우선순위가 높다 	알림o]
+cp				| 파일 복사
+	-f 	force 묻지마라
+	-i	한번 더 물어보는 친구
+	-b	기존파일 ~붙이고 파일 만들기
+	-r	강제로 복사
 	
+[mv의 경우 ,f가 i보다 우선순위가 높다	알림x]
+mv				| 파일 이동(이름바꾸기)
+	-f 	force 묻지마라
+	-i	한번 더 물어보는 친구
+	-b	기존파일 ~붙이고 파일 만들기	
+	-v	상세 변경사항
+
+
+
+du				| 디스크 용량 확인
+
+
+
+
+
+
+
+
+
+
+

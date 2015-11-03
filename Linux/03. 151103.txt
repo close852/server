@@ -1,0 +1,425 @@
+mv 이동
+
+http://www.delmaster.net/138
+http://www.delmaster.net/200
+
+
+
+1. /에서 master의 홈디렉토리로 이동
+[master@L1 /]$ cd ~
+[master@L1 ~]$ pwd
+/home/master
+
+2. master의 홈디렉토리에 test100, test101 디렉토리 생성
+[master@L1 ~]$ mkdir test100
+[master@L1 ~]$ mkdir test101
+[master@L1 ~]$ ls
+Desktop    Downloads  Pictures  Templates  test100
+Documents  Music      Public    Videos     test101
+
+3. / 경로로 이동
+[master@L1 ~]$ cd /
+[master@L1 /]$ pwd
+/
+
+4. test100 디렉토리에 a, b 파일 생성
+[master@L1 /]$ su - 
+암호:
+[root@L1 master]# touch ./test100/a
+[root@L1 master]# touch ./test100/b
+
+5. a 파일 내부에 "씐나는 리눅스" 입력(리디렉션 사용할것)
+[root@L1 master]# echo 씐나는 리눅스 > ./test100/a
+
+6. a를 c로 하드링크 생성
+[root@L1 master]# ln test100/a test100/c
+[root@L1 master]# cat ./test100/c
+씐나는 리눅스
+
+7. b 삭제
+[root@L1 master]# rm -f ./test100/b
+
+8. b를 a의 심볼릭 링크로  생성
+[root@L1 master]# ln -s ./test100/a ./test100/b
+[root@L1 master]# ls -l ./test100
+합계 8
+-rw-r--r--. 2 root root 20 2015-11-03 10:40 a
+lrwxrwxrwx. 1 root root 11 2015-11-03 10:43 b -> ./test100/a
+-rw-r--r--. 2 root root 20 2015-11-03 10:40 c
+
+9. d 라는 빈 파일 생성(echo 명령어 쓰지말것)
+[root@L1 master]# touch d
+[root@L1 master]# ls 
+d
+
+10. d를 aa로 이름 변경
+[root@L1 master]# mv d aa
+aa
+
+11. aa를 test101 디렉토리로 복사
+[root@L1 master]# cp aa ./test101/
+
+12. /etc 디렉토리내의 목록을 test101 디렉토리에 etc-ls 라는 이름의 파일로 저장
+[root@L1 master]# ls /etc/ > ./test101/etc-ls
+
+13. test101 디렉토리로 이동
+[root@L1 master]# cd ./test101
+[root@L1 test101]# 
+
+13. etc-ls 파일을 상대경로를 이용하여 master의 홈디렉토리로 복사
+[root@L1 test101]# cp etc-ls ../
+
+14. who 명령어의 내용을 test100 디렉토리의 who라는 폴더 생성후 who파일명으로 저장(절대경로 사용)
+[root@L1 test101]#  who > /home/master/test100/who/who
+
+15. master의 루트로 이동(루트를 의미하는 단축 기호를 사용하여 이동)
+[root@L1 /]# logout
+[master@L1 /]$ 
+
+16. test100 폴더를 master의 홈디렉토리 하위에 test1000 이라는 폴더로 복사(절대경로 이용해서)
+[root@L1 master]# cp -r test100 /home/master/test1000
+
+17. test100 폴더 삭제(rm 명령 사용)
+[root@L1 master]# rm -rf test100
+
+18. test101 폴더로 이동 후, test1000폴더를 test100폴더로 이름 변경(상대경로이용)
+[root@L1 test101]# mv ./../test1000 ./test100
+
+19. ls 명령어의 도움말 확인 후 종료
+[root@L1 test101]# man ls
+[root@L1 test101]# man ls > ls-man-help
+
+
+
+
+==================================================================
+
+du			| 디스크 사용량 보기[사용중인거]
+	-s 	요약해 주는 옵션.
+	-sh 	[h는 사람이 보기 편하게]
+
+df			| 디스크 여유량 보기[여유량]
+	-lh 네트워크 빼고 마운트 된 것만 확인
+
+
+[root@L1 Test]# du -sh
+200K	.
+
+[root@L1 Test]# du -h
+4.0K	./a/Desktop/Test/a
+8.0K	./a/Desktop/Test
+32K	./a/Desktop
+40K	./a
+8.0K	./b/Desktop/Test/a
+4.0K	./b/Desktop/Test/b
+36K	./b/Desktop/Test
+60K	./b/Desktop
+84K	./b
+8.0K	./151103/b/a
+12K	./151103/b
+24K	./151103
+200K	.
+
+
+[root@L1 Test]# df -lh
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup-lv_root
+                       18G  4.5G   12G  28% /
+tmpfs                 491M  228K  491M   1% /dev/shm
+/dev/sda1             477M   37M  415M   9% /boot
+/dev/sr0              3.7G  3.7G     0 100% /media/CentOS_6.7_Final
+
+
+[root@L1 Test]# df -lh /home/master/
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup-lv_root
+                       18G  4.5G   12G  28% /
+
+파티션의 사용가능 공간으로 보여준다.
+
+which
+
+whereis
+
+uptime
+
+
+[which 		| 위치가 어디야]
+
+[root@L1 Test]# which ls
+alias ls='ls --color=auto'
+	/bin/ls
+
+[root@L1 Test]# which df
+/bin/df
+
+
+[whereis	| 어디에 설치됨?]
+[root@L1 Test]# whereis ls
+ls: /bin/ls /usr/share/man/man1/ls.1.gz /usr/share/man/man1p/ls.1p.gz
+
+
+
+uname
+[root@L1 Test]# uname -a
+Linux L1 2.6.32-573.el6.x86_64 #1 SMP Thu Jul 23 15:44:03 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+
+
+who		| 현재 시스템에 로그인한 사용자
+	tty : ctrl + alt F1~7 
+	pts/: 터미널
+[root@L1 Test]# who
+root     tty2         2015-11-03 11:34
+master   tty1         2015-11-03 09:20 (:0)
+master   pts/0        2015-11-03 09:22 (:0.0)
+
+
+[root@L1 Test]# w
+ 11:38:34 up  2:20,  3 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+root     tty2     -                11:34    4:22   0.03s  0.03s -bash
+master   tty1     :0               09:20    2:20m 29.88s  0.36s pam: gdm-passwo
+master   pts/0    :0.0             09:22    1.00s  0.59s 12.94s gnome-terminal
+
+
+
+
+
+=============================================================================================================
+
+도움말 표준        
+<필수>
+[옵션]
+[ -desc<설명>]  : 써도 되고 안써도 되는데 쓸꺼면 반드시 설명할 것.
+[...|...]	: 골라서 쓰세요
+
+vi 편집기
+vi와 vim
+명령어 모드와 데이터 입력모드가 분리.
+
+~                                                                               
+~                              VIM - Vi IMproved                                
+~                                                                               
+~                               version 7.4.629                                 
+~                           by Bram Moolenaar et al.                            
+~                      Modified by <bugzilla@redhat.com>                        
+~                 Vim is open source and freely distributable                   
+~                                                                               
+~                        Help poor children in Uganda!                          
+~                type  :help iccf<Enter>       for information                  
+~                                                                               
+~                type  :q<Enter>               to exit                          
+~                type  :help<Enter>  or  <F1>  for on-line help                 
+~                type  :help version7<Enter>   for version info                 
+~                                                                               
+~                                                            
+
+
+
+
+~                                                                               
+~                                빔 - 향상된 Vi                                 
+~                                                                               
+~                                  판 7.4.629                                   
+~                           by Bram Moolenaar et al.                            
+~                      Modified by <bugzilla@redhat.com>                        
+~                   빔은 소스가 열려 있고 공짜로 배포됩니다                     
+~                                                                               
+~                           빔 개발을 후원해 주세요!                            
+~            이에 대한 정보를 보려면    :help sponsor<엔터>    입력             
+~                                                                               
+~            끝내려면                   :q<엔터>               입력             
+~            온라인 도움말을 보려면     :help<엔터> 또는 <F1>  입력             
+~            판 정보를 보려면           :help version7<엔터>   입력             
+~                                                                               
+~     
+
+
+[vi 편집기]
+
+ * vi [옵션] [파일명]
+  * -r 손상된 파일 복구
+  * +n 파일을 열면서 n번째 줄로 이동
+   * vi +15 test.txt -> test.txt파일을 열면서 15번째 줄로 이동
+  * + 파일을 열면서 마지막 줄로 이동
+
+ * vi 저장/종료
+  * w -> 파일 저장
+  * wq -> 파일 저장후 종료
+  * q -> 편집하지 않았을경우 종료
+  * q! -> 편집내용을 저장하지 않고 강제 종료
+  * wq! -> 변경내용을 강제로 저장하고 종료
+  * wq <filename> -> <filename>으로 저장하고 종료
+  * 1,5w test.txt -> 1행부터 5행까지의 내용을 test.txt파일로 저장
+  * 6,10w >> test.txt -> 6행부터 10행까지의 내용을 test.txt파일에 추가
+
+ * 커서이동
+  * gg -> 파일의 처음으로 이동
+  * G -> 파일의 끝으로 이동
+  * <숫자> -> <숫자>행으로 이동
+
+ * 삽입
+  * i -> 현재 커서 위치에 삽입
+  * a -> 현재 커서 다음 위치에 삽입
+  * I -> 현재 커서가 위치한 줄의 제일 앞에 삽입
+  * A -> 현재 커서가 위치한 줄의 제일 뒤에 삽입
+  * o -> 현재 커서가 위치한 줄의 아랫줄에 삽입
+  * O -> 현재 커서가 위치한 줄의 위에 삽입
+  * r <filename> -> 현재커서 위치 아래에 <filename>을 읽어와 삽입한다.
+  * r !date -> 현재커서 위치 아래에 date명령의 결과를 삽입한다.
+
+ * 복사
+  * yy -> 현재 커서가 위치한 줄을 복사
+  * 'n'yy -> 현재 커서가 위치한 줄에서 아래로 'n'줄 만큼 복사한다
+  * y0 -> 커서 왼쪽부터 라인의 처음까지 복사
+  * 'n'yw -> 커서가 위치한 단어부터 뒤로 'n'개의 단어 복사
+  * yl -> 커서가 위치한 문자 복사
+
+ * 붙이기
+  * p -> 현재 커서 아래에 붙여넣기
+  * P -> 현재커서 위에 붙여넣기
+
+ * 삭제
+  * D -> 현재 커서부터 라인 끝까지 삭제
+  * dd -> 현재 커서가 위치한 줄 삭제  
+  * 'n'dd -> 현재 커서가 위치한 줄에서 아래로 'n'줄 삭제
+  * dw -> 현재 커서가 위치한 단어 삭제
+  * 'n'dw -> 현재 커서가 위차한 단어 부터 뒤로 'n'개의 단어 삭제
+  * x -> 현재 커서 위치 문자 삭제
+  * d0 -> 현재 커서 왼쪽부터 라인의 처음까지 삭제
+  * 10, 20d -> 10번째 라인부터 20번째 라인까지 삭제
+
+ * 변경/바꾸기
+  * r -> 현재 커서 위치의 문자 변경
+  * R -> 현재 커서 위치부터 원하는 만큼 문자 변경
+  * C -> 커서가 위치한 전체 라인 변경
+  * :s/기존문자열/바꿀문자열 -> 커서가 위치한 라인의 첫번째 문자열 바꾸기
+  * :s/기존문자열/바꿀문자열/g -> 커서가 위치한 라인의 모든 문자열 바꾸기
+  * 1,$ s/기존문자열/바꿀문자열/g -> 문서 전체의 문자열 바꾸기
+   * %s/기존문자열/바꿀문자열/g -> 문서 전체의 문자열 바꾸기
+
+ * 기타
+  * [CRTL]+g -> 현재 편집중인 파일 정보 표시
+  * [SHIFT]+[방향키] -> 단어 단위로 이동
+  * u -> 방금한 명령 취소
+  * . -> 방금한 명령 반복
+  * 'n'. -> 방금한 명령 'n'번 반복
+  * ~ -> 커서가 위치한 문자의 대소문자 변경
+  * /'검색어' -> '검색어'의 문자를 검색
+   * /test
+   * 검색이후
+    * 현재 커서위치 다음으로 계속 검색 -> n
+    * 현재 커서위치 이전으로 계속 검색 -> N 
+  * ! -> vi사용중 shell 명령어 사용
+   * !bash
+
+* . -> 현재줄을 의미
+  * , -> ~몇번째 줄까지를 의미
+   * 2,10 -> 2번째 줄부터 10번째 줄까지
+  * $ -> 마지막 줄을 의미
+  * % -> 첫번째 줄 부터 끝줄까지의 의미
+  * 특수문자를 일반문으로 사용할때는 \를 특수문자 앞에 사용
+
+ * 환경변수
+  * set nu -> 행번호 출력
+  * set ic -> 문자열 검색시 대소문자 구별없이 검색
+  * set ai -> 라인변경시 상위 라인과 같은 수준으로 변경(프로그램작성시도움)
+  * set sm -> () 또는 {}입력시 짝이되는 기호를 찾아가 알려준다(프로그램작성시도움)
+  * set no -> 환경변수 해제
+   * set nonu
+   * set noic
+   * set noai
+
+  * 환경변수 저장
+   * 사용자 홈디렉토리에 .exrc파일 생성후 변수 저장
+    * vi .exrc
+     * set ai
+     * set nu
+  * 모든 환경변수 보기 
+   * set all
+
+
+
+
+
+
+
+==================================
+vi a.txt
+:wq aa.txt
+
+vi a.txt
+:1,3w c.txt
+
+:6,7w >> c.txt
+
+
+vi passwd.txt
+:1,2 d.txt
+:4,5w >> d.txt
+
+
+vi a.txt
+동해물과 백두산이
+마르고 닳도록
+
+하나님이 보우하사
+우리나라 만세
+
+무궁화 삼천리 화려 강산
+대한사람 대한으로 길이 보전하세.
+
+
+gg	앞으로
+G	끝으로
+:3	이동
+O	위로 한줄 삽입
+o	아래로 한줄 삽입
+
+D	현재 라인 내용만 삭제
+dd	지우기
+n-md	n에서m까지 삭제
+
+숫자dd	줄 수 만큼 삭제
+u	ctrl+z	
+r	이어붙이기
+r !cal	달력(calender)
+
+yy	복사
+숫자yy	줄 수 만큼 복사
+n-my	n에서m까지 복사
+
+p	붙여넣기
+A	다음 커서 삽입
+a	제일 끝줄 삽입
+I	지금 커서 삽입
+i	제일 앞줄 삽입
+
+r	한글자 변경
+R	끝낼 때 까지 변경(insert)
+
+:s/1/5		: 현재 커서만 1을 5로바꾸기
+:s/1/5g		: 1을 5로 바꾸는데 한줄 전체다바꾸기
+:%s/1/5/g 	: 현재 문서 전체 내용 변경
+/(검색어)	: n 위에서 아래로 / N 아래서 위로
+!<명령어>	: 명령어 치면 된다.
+!bash		: bash 셀 열기
+
+[root@L1 test]# cd ~
+[root@L1 ~]# pwd
+/root
+vi .exrc
+set ai
+set nu
+
+
+
+####
+
+L2
+
+vi 편집기 실행시 nu,ai 반영 	[root@L1 ~]#vi .exrc set ai set nu
+L2의 호스트명 L2로 설정 	/etc/sysconfig/network
+L2 부팅시 eth0 자동활성화	/etc/sysconfig/network-scripts/ifcfg-eth0 [ethX] 네트워크 편집
+L2 런레벨 3으로 변경 후 재부팅	/etc/inittab

@@ -139,6 +139,8 @@ Documents/  Music/      Public/    Videos/
 
 
 alias
+~/.bashrc
+/home/.bashrc
 [master@L1 ~]$ alias lla='ls -la'
 
 -rw-r--r--.  1 master master  124 2015-07-24 03:55 .bashrc
@@ -279,5 +281,7 @@ mkdir 	-p 1/2/3/4/5/6/7/8/9
 
 rm -rf
 	-r °­Á¦ 
+
+
 
 
