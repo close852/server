@@ -81,7 +81,44 @@ mv				| 파일 이동(이름바꾸기)
 du				| 디스크 용량 확인
 
 
+스켈레톤 키
 
+
+tar
+	-c	: 파일 묶기
+	-x	: 파일 풀기
+	-v	: 내용 진행 확인
+	-z	: gz 로 압축	(f앞에 적을 것)
+	-j	: bz 로 압축	(f앞에 적을 것)
+	-f	: 파일 이름 생성(제일 뒤에 적을 것)
+	-C	: 압축 풀 때, 경로 지정
+
+
+
+rpm 
+	-qa	: 설치 정보 확인
+	-qi	: 상세 정보 보기
+	-qc	: 설정 파일 확인 (의존성 포함)
+	-ivh	: 설치
+	-Uvh	: 업데이트
+
+yum	
+	install
+	update
+	search
+	remove
+yum install firefox --downloadonly --downloaddir=/root
+ * yum install <Package> : 패키지 설치, 가능하면 업데이트
+ * yum info <Package> : 패키지 정보
+ * yum groupinstall <PackageGroup> : 패키지 그룹 설치
+ * yum groupinfo <PackageGroup> : 패키지 그룹 정보
+ * yum search <*Package*> : 특정 문자열로 패키지 검색
+ * yum remove <Package> : 패키지 삭제
+ * yum list [Package] : update 가능한 패키지 확인
+ * yum update [Package] : 패키지 업데이트 
+ * yum install <RPM> : 보유중인 rpm 패키지설 설치(의존성관련파일 자동 다운로드)
+
+http://www.delmaster.net/183
 
 
 

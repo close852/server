@@ -1,0 +1,493 @@
+cjhm.core.windows.net
+cjhm.cloudapp.net
+
+
+1. 클라우드 서비스 만들기
+2. 저장소 만들기
+3. 가상 컴퓨터 [Cent OS 6.7 만들기 - 갤러리에서]
+
+Putty 설치 
+Path iPutty 말고 Putty로 할 것.
+
+SSH로 연결해주는 거다!
+
+CP949 - 한글 윈도우용 charset
+
+선택 윈도우
+변환 - CP949 -> UTF-8
+모양 - Font
+
+
+login as: root
+root@192.168.100.201's password:
+Last login: Tue Nov  3 11:34:12 2015
+[root@L1 ~]#
+[root@L1 ~]# uname -a
+Linux L1 2.6.32-573.el6.x86_64 #1 SMP Thu Jul 23 15:44:03 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+[root@L1 ~]#
+
+=====================
+root 암호 바꾸기
+ sudo su -
+ 
+passwd
+
+
+
+[cjhm@Cent01 ~]$ sudo su -
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for cjhm:
+[root@Cent01 ~]# passwd
+Changing password for user root.
+New password:
+BAD PASSWORD: it is too simplistic/systematic
+Retype new password:
+passwd: all authentication tokens updated successfully.
+
+
+
+
+===========================================================================================
+
+
+tar archive
+
+- 압축하기
+tar cvf
+[root@L1 Desktop]# tar -cvf Test.tar Test/
+ c 묵겠다 /v 자세히 보겠다. /f 이름을 지정하겠다  Test.tar 묶을 파일
+[root@L1 Desktop]# tar -cvzf /root/Tar/master-home.tar.gz /home/master/
+
+- 압축풀기
+
+
+
+* -c 파일 묶음
+* -x 묶인 파일 해제
+* -v 묶음 또는 해제시 정보 출력
+* -f 파일 이름 지정
+* -C 묶음 해제시 경로 지정
+* tar -xvf test.tar -C /home/t1/test
+
+* gzip
+    * -z
+        * tar -cvzf test.tar.gz /home/t1/test
+        * tar -xvzf test.tar.gz -C /home/t1/test2
+
+* bzip2
+   * -j
+        * tar -cvjf test.tar.bz /home/t1/test
+        * tar -xvjf test.tar.bz -C /home/t1/test2
+
+* xz
+    * -J
+    * tar -cvJf test.tar.xz /home/t1/test
+    * tar -xvJf test.tar.xz -C /home/t1/test2
+
+-cvf + z/j/J
+-xvf + z/j/J
+
+
+	#실습	
+[root@L1 Desktop]# pwd
+/home/master/Desktop
+[root@L1 Desktop]# cp ../Downloads/ttf-nanum-coding-2.0-2.noarch.rpm  .
+[root@L1 Desktop]# mv ttf-nanum-coding-2.0-2.noarch.rpm ./Test/
+
+
+history | tail -20
+
+압축 내용 비교
+[root@L1 Desktop]# ls -lh /root/Tar/
+합계 99M
+-rw-r--r--. 1 root root  38M 2015-11-04 11:18 etc.tar
+-rw-r--r--. 1 root root  11M 2015-11-04 11:34 etc.tar.gz
+-rw-r--r--. 1 root root  34M 2015-11-04 11:16 master-home.tar
+-rw-r--r--. 1 root root  17M 2015-11-04 11:33 master-home.tar.gz
+-rw-r--r--. 1 root root 150K 2015-11-04 11:22 ssh.tar
+-rw-r--r--. 1 root root  14K 2015-11-04 11:35 ssh.tar.gz
+
+
+
+ tar -cvzf /root/Tar/master-home.tar.gz /home/master/
+ ls -lh /root/Tar/
+ tar -cvzf /root/Tar/etc.tar.gz /etc/
+ ls -lh /root/Tar/
+ tar -cvzf /root/Tar/ssh.tar.gz /etc/ssh/
+ ls -lh /root/Tar/
+
+
+
+	#압축풀기
+[root@L1 Desktop]# cd /root/Tar/
+[root@L1 Tar]# mkdir ssh-tar
+[root@L1 Tar]# cp ssh.tar ssh-tar/
+
+
+[root@L1 Tar]# tar -xvf etc.tar -C etc-tar/
+[root@L1 Tar]# tar -xvzf etc.tar.gz -C etc-tar/etc-gz/
+[root@L1 Tar]# tar -xvjf etc.tar.bz -C etc-tar/etc-bz/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* RPM(Redhat Package Manager), DPMS(Debian Package Management System) 등의 패키지 관리자
+
+[Red Hat RPM]
+    * 설정파일, 바이너리, 스크립트, 메타데이터 등 설치, 업데이트, 제거에 필요한 모든것이 들어 있다.
+    * Fedora, CentOS, OpenSUSE 등이 RPM 사용.
+    * Package이름 구성 : 패키지이름-버전-릴리즈.아키텍쳐.rpm (ex : bash-4.1.2-15.e16_4.x86_64)
+
+[RPM 설치 옵션]
+
+--install(-i) : 설치 단, 이전버전이 설치되어 있으면 설치하지 않는다.
+--oldpackage : 예전 버전의 패키지로 교체
+--upgrade(-U): 이전 버전이 설치되어 있으면 업그래이드, 없으면 설치
+-F : 이전 버전이 설치되어 있으면 설치. 없으면 설치 안함.
+--erase(-e) : 삭제
+--force : RPM설치시 검사 단계 무시하고 설치. 특정옵션을 주고 설치할때 사용
+--h : 설치 진행상황 표시
+--percent : 설치 진행률 표시
+--nodeps : 의존성 무시하고 설치
+--test : 실제 설치전 테스트 
+-v : 설치 정보 출력
+--query(-q) : 패키지의 정보 보기 ex)rpm -q bash
+-qa : 시스템에 설치된 패키지 정보 표시 
+-qi <Package> : Package 이름, 버전, 설명 정보 출력
+-qR <Package> : Package가 의존하는 목록 출력
+-ql <Package> : Package에 포함된 파일 출력
+-qd <Package> : Package에 포함된 문서 파일만 출력
+-qc <Package> : Package에 포함된 설정 파일만 출력
+-qf <File> : 해당 File이 어느 Package에 설치된 파일인지 Query
+
+-ivh <Package> : Package 설치
+-Uvh <Package> : 이전 버전의 Package가 있다면 Package 삭제 후 새로운 버전으로 업그래이드
+
+[yum]
+ * yum install <Package> : 패키지 설치, 가능하면 업데이트
+ * yum info <Package> : 패키지 정보
+ * yum groupinstall <PackageGroup> : 패키지 그룹 설치
+ * yum groupinfo <PackageGroup> : 패키지 그룹 정보
+ * yum search <*Package*> : 특정 문자열로 패키지 검색
+ * yum remove <Package> : 패키지 삭제
+ * yum list [Package] : update 가능한 패키지 확인
+ * yum update [Package] : 패키지 업데이트 
+ * yum install <RPM> : 보유중인 rpm 패키지설 설치(의존성관련파일 자동 다운로드)
+
+# YUM으로 RPM 다운로드
+
+- 패키지 설치
+
+yum install yum-downloadonly
+
+- 다운로드 방법
+
+yum install <패키지명> --downloadonly
+
+- 다운로드 방법(다운로드경로지정)
+
+yum install <패키지명> --downloadonly --downloaddir=<경로>
+
+[리눅스에 크롬 설치]
+
+vi /etc/yum.repos.d/google.repo
+
+[google]
+name=Google - x86_64
+baseurl=http://dl.google.com/linux/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+그래도 안되면
+# wget http://chrome.richardlloyd.org.uk/install_chrome.sh
+# chmod u+x install_chrome.sh
+# ./install_chrome.sh
+
+
+rpm -qa 	: 설치확인
+
+[root@L1 Tar]# rpm -qa | grep bash
+bash-4.1.2-33.el6.x86_64
+
+rpm -qi 	: 상세 정보보기
+
+[root@L1 Tar]# rpm -qi bash
+Name        : bash                         Relocations: (not relocatable)
+Version     : 4.1.2                             Vendor: CentOS
+Release     : 33.el6                        Build Date: 
+Install Date:                                  Build Host: c6b8.bsys.dev.centos.org
+Group       : System Environment/Shells     Source RPM: bash-4.1.2-33.el6.src.rpm
+Size        : 3142151                          License: GPLv3+
+Signature   : RSA/SHA1, 2015년 07월 25일 (토) 오전 05시 37분 16초, Key ID 0946fca2c105b9de
+Packager    : CentOS BuildSystem <http://bugs.centos.org>
+URL         : http://www.gnu.org/software/bash
+Summary     : The GNU Bourne Again shell
+Description :
+The GNU Bourne Again shell (Bash) is a shell or command language
+interpreter that is compatible with the Bourne shell (sh). Bash
+incorporates useful features from the Korn shell (ksh) and the C shell
+(csh). Most sh scripts can be run by bash without modification.
+
+
+
+
+rpm -qc		: 설치경로 확인
+
+[root@L1 Tar]# rpm -qc bash
+/etc/skel/.bash_logout
+/etc/skel/.bash_profile
+/etc/skel/.bashrc
+
+
+rpm 설치 / 업그레이드 / 삭제
+[root@L1 master]# cd Downloads/
+
+[root@L1 Downloads]# ls
+ttf-nanum-coding-2.0-2.noarch.rpm
+
+[root@L1 Downloads]# rpm -e ttf-nanum-coding
+
+[root@L1 Downloads]# rpm  -ivh /home/master/Downloads/ttf-nanum-coding-2.0-2.noarch.rpm 
+준비 중...               ########################################### [100%]
+   1:ttf-nanum-coding       ########################################### [100%]
+
+[root@L1 Downloads]# rpm -Uvh ttf-nanum-coding-2.0-2.noarch.rpm 
+준비 중...               ########################################### [100%]
+   1:ttf-nanum-coding       ########################################### [100%]
+
+
+[root@L1 Desktop]# ls -l
+-rwxrw-rw-. 1 master master  929340 2015-09-23 03:39 bash-4.1.2-33.el6_7.1.x86_64.rpm
+
+[root@L1 Desktop]# rpm -qa | grep bash
+bash-4.1.2-33.el6.x86_64
+[root@L1 Desktop]# rpm -ivh bash-4.1.2-33.el6_7.1.x86_64.rpm 
+경고: bash-4.1.2-33.el6_7.1.x86_64.rpm: Header V3 RSA/SHA1 Signature, key ID c105b9de: NOKEY
+준비 중...               ########################################### [100%]
+	bash-4.1.2-33.el6_7.1.x86_64에서 설치되는 /bin/bash 파일은 bash-4.1.2-33.el6.x86_64 패키지의 파일과 충돌합니다
+
+
+[root@L1 Desktop]# rpm -Uvh bash-4.1.2-33.el6_7.1.x86_64.rpm 
+경고: bash-4.1.2-33.el6_7.1.x86_64.rpm: Header V3 RSA/SHA1 Signature, key ID c105b9de: NOKEY
+준비 중...               ########################################### [100%]
+   1:bash                   ########################################### [100%]
+
+[root@L1 Desktop]# rpm -qa | grep bash
+bash-4.1.2-33.el6_7.1.x86_64
+
+
+[root@L1 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 | grep -i onboot
+ONBOOT=no
+
+grep -i는 대/소문자 구분 하지 않겠다.
+
+
+[root@L1 ~]# yum info wireshark
+Loaded plugins: fastestmirror, refresh-packagekit, security
+Loading mirror speeds from cached hostfile
+ * base: centos.mirror.cdnetworks.com
+ * extras: centos.mirror.cdnetworks.com
+ * updates: centos.mirror.cdnetworks.com
+Installed Packages
+Name        : wireshark
+Arch        : x86_64
+Version     : 1.8.10
+Release     : 17.el6
+Size        : 63 M
+Repo        : installed
+From repo   : anaconda-CentOS-201508042137.x86_64
+Summary     : Network traffic analyzer
+URL         : http://www.wireshark.org/
+License     : GPL+
+Description : Wireshark is a network traffic analyzer for Unix-ish operating
+            : systems.
+            : 
+            : This package lays base for libpcap, a packet capture and filtering
+            : library, contains command-line utilities, contains plugins and
+            : documentation for wireshark. A graphical user interface is
+            : packaged separately to GTK+ package.
+
+Available Packages
+Name        : wireshark
+Arch        : i686
+Version     : 1.8.10
+Release     : 17.el6
+Size        : 10 M
+Repo        : base
+Summary     : Network traffic analyzer
+URL         : http://www.wireshark.org/
+License     : GPL+
+Description : Wireshark is a network traffic analyzer for Unix-ish operating
+            : systems.
+            : 
+            : This package lays base for libpcap, a packet capture and filtering
+            : library, contains command-line utilities, contains plugins and
+            : documentation for wireshark. A graphical user interface is
+            : packaged separately to GTK+ package.
+
+
+
+yum remove wireshark
+
+yum -y install wireshark
+
+
+
+
+bind 설치 / 정보확인 / 삭제 / 장보확인
+
+
+	## yum install bind
+[root@L1 ~]# yum -y install bind
+Loaded plugins: fastestmirror, refresh-packagekit, security
+Setting up Install Process
+Loading mirror speeds from cached hostfile
+ * base: ftp.neowiz.com
+ * extras: ftp.neowiz.com
+ * updates: ftp.neowiz.com
+Resolving Dependencies
+--> Running transaction check
+---> Package bind.x86_64 32:9.8.2-0.37.rc1.el6_7.4 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package    Arch         Version                            Repository     Size
+================================================================================
+Installing:
+ bind       x86_64       32:9.8.2-0.37.rc1.el6_7.4          updates       4.0 M
+
+Transaction Summary
+================================================================================
+Install       1 Package(s)
+
+Total download size: 4.0 M
+Installed size: 7.3 M
+Downloading Packages:
+bind-9.8.2-0.37.rc1.el6_7.4.x86_64.rpm                   | 4.0 MB     00:01     
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing : 32:bind-9.8.2-0.37.rc1.el6_7.4.x86_64                        1/1 
+  Verifying  : 32:bind-9.8.2-0.37.rc1.el6_7.4.x86_64                        1/1 
+
+Installed:
+  bind.x86_64 32:9.8.2-0.37.rc1.el6_7.4                                         
+
+Complete!
+
+
+
+	## yum info bind
+[root@L1 ~]# yum info bind
+ * base: mirror.oasis.onnetcorp.com
+ * extras: mirror.oasis.onnetcorp.com
+ * updates: mirror.oasis.onnetcorp.com
+Installed Packages
+Name        : bind
+Arch        : x86_64
+Epoch       : 32
+Version     : 9.8.2
+Release     : 0.37.rc1.el6_7.4
+Size        : 7.3 M
+Repo        : installed
+From repo   : updates
+Summary     : The Berkeley Internet Name Domain (BIND) DNS (Domain Name System)
+            : server
+URL         : http://www.isc.org/products/BIND/
+License     : ISC
+Description : BIND (Berkeley Internet Name Domain) is an implementation of the
+            : DNS (Domain Name System) protocols. BIND includes a DNS server
+            : (named), which resolves host names to IP addresses; a resolver
+            : library (routines for applications to use when interfacing with
+            : DNS); and tools for verifying that the DNS server is operating
+            : properly.
+
+
+	## yum -remove bind
+
+[root@L1 ~]# yum -y remove bind
+Loaded plugins: fastestmirror, refresh-packagekit, security
+Setting up Remove Process
+Resolving Dependencies
+--> Running transaction check
+---> Package bind.x86_64 32:9.8.2-0.37.rc1.el6_7.4 will be erased
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package    Arch         Version                           Repository      Size
+================================================================================
+Removing:
+ bind       x86_64       32:9.8.2-0.37.rc1.el6_7.4         @updates       7.3 M
+
+Transaction Summary
+================================================================================
+Remove        1 Package(s)
+
+Installed size: 7.3 M
+Downloading Packages:
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Erasing    : 32:bind-9.8.2-0.37.rc1.el6_7.4.x86_64                        1/1 
+  Verifying  : 32:bind-9.8.2-0.37.rc1.el6_7.4.x86_64                        1/1 
+
+Removed:
+  bind.x86_64 32:9.8.2-0.37.rc1.el6_7.4                                         
+
+Complete!
+
+
+ yum info ttf-nanum-coding
+
+[root@L1 Downloads]# yum info ttf-nanum-coding
+Loaded plugins: fastestmirror, refresh-packagekit, security
+Loading mirror speeds from cached hostfile
+ * base: mirror.oasis.onnetcorp.com
+ * extras: mirror.oasis.onnetcorp.com
+ * updates: mirror.oasis.onnetcorp.com
+Installed Packages
+Name        : ttf-nanum-coding
+Arch        : noarch
+Version     : 2.0
+Release     : 2
+Size        : 4.4 M
+Repo        : installed
+Summary     : Nanum series fixed width TrueType fonts
+License     : see /usr/share/doc/ttf-nanum-coding/copyright
+Description : This is a set of Korean TrueType fonts, which contains 2 font
+            : families.
+            : 
+            : 
+            : (Converted from a deb package by alien version 8.73.)
+
+[root@L1 ~]# yum install firefox --downloadonly --downloaddir=/root
+
+
+http://www.delmaster.net/183
+
+
+
