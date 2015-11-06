@@ -1,0 +1,193 @@
+[사용자 계정 생성 실습]
+
+1. 김태희(t2) 계정 생성
+     - UID : 600
+     - Shell : bash
+[root@L1 home]# useradd -u 600 -s /bin/bash t2
+[root@L1 home]# usermod -c 김태희 t2
+
+2. 이하늬(u1) 계정 생성
+     - UID : 601
+     - Shell : bash
+[root@L1 home]# useradd -u 601 -s /bin/bash u1
+[root@L1 home]# usermod -c 이하늬 u1
+
+3. 김태희 계정 수정
+     - 암호 지정
+[root@L1 home]# passwd t2
+
+4. 이하늬 계정 수정
+     - 암호 지정
+     - Shell : nologin
+[root@L1 home]# passwd u1
+[root@L1 home]# usermod -s /sbin/nologin
+
+
+5. linux 그룹 생성
+     - GID : 1000
+[root@L1 home]# groupadd linux -g 1000
+
+6. delmaster 그룹 생성
+     - GID : 1100
+[root@L1 home]# groupadd -g 1100 delmaster
+
+7. 김태희 계정의 기본 그룹을 linux로 변경
+[root@L1 home]# usermod -g linux t2
+
+8. 이하늬 계정의 기본 그룹을 delmaster로 변경
+[root@L1 home]# usermod -g delmaster u1
+
+9. 이하늬 계정의 UID를 602로 변경
+[root@L1 home]# usermod -u 602 u1
+
+10. 이하늬 계정의 Shell을 bash로 변경
+[root@L1 home]# usermod -s /bin/bash u1
+
+11. 김태희 계정의 추가 그룹을 delmaster로 설정
+[root@L1 home]# usermod -G delmaster t2
+
+12. 이하늬 계정의 추가 그룹을 linux로 설정
+[root@L1 home]# usermod -G linux u1
+
+13. 아이유(t3) 계정 생성
+     UID : 603
+     Shell : bash
+     기본 그룹 : delmaster
+     추가 그룹 : linux
+     암호 지정
+[root@L1 home]# useradd -u 603 -s /bin/bash -g delmaster -G linux t3
+[root@L1 home]# usermod -c 아이유 t3
+
+14. 위대한(m1) 계정 생성
+     UID : 900
+     Shell : nologin
+     기본 그룹 : linux
+     암호지정
+[root@L1 home]# useradd -u 900 -s /sbin/nologin -g linux -c 위대한 m1
+[root@L1 home]# passwd m1
+
+15. managers 그룹 생성, sales 그룹 생성
+[root@L1 home]# groupadd managers
+[root@L1 home]# groupadd sales
+
+16. 위대한 계정의 기본 그룹을 managers로 변경하고 기존의 기본 그룹은 추가 그룹으로 지정
+[root@L1 home]# usermod -g managers -G linux m1
+
+17. delmaster 그룹의 gid를 1101로 변경
+[root@L1 home]# groupmod -g 1101 delmaster
+
+18. linux 그룹의 이름을 linuxer로 변경
+[root@L1 home]# groupmod -n linuxer linux
+
+19. sales 그룹 삭제
+[root@L1 home]# groupdel sales
+
+20. 위대한 계정 삭제
+     - 홈디렉토리도 삭제
+[root@L1 home]# userdel -r m1
+
+21. /home에 디렉토리 생성
+     - 디렉토리명 : public
+
+22. /home/public 디렉토리의 퍼미션 수정
+     - 사용자 : 읽기, 쓰기, 실행
+     - 그룹 : 읽기, 쓰기, 실행
+     - 그외 : 읽기, 쓰기, 실행
+[root@L1 home]# chmod 777 public/
+[root@L1 home]# ls -l
+drwxrwxrwx.  2 root   root   4096 2015-11-06 11:06 public
+
+23. home/public에 각 계정의 사용자로 디렉토리 생성
+     - t2 사용자 : t2
+     - u1 사용자 : u1
+[u1@L1 public]$ mkdir u1
+[t2@L1 public]$ mkdir t2
+
+24. /home/public/하위의 t2,u1디렉토리의 권한 수정 (문자로 수정)
+    - t2 : rwxr----x
+    - u1 : rwxr-xr--
+[t2@L1 public]$ chmod u=rwx,g=r,o=x t2
+[u1@L1 public]$ chmod u=rwx,g=rx,o=r u1
+
+drwxr----x. 2 t2 linuxer   4096 2015-11-06 11:11 t2
+drwxr-xr--. 2 u1 delmaster 4096 2015-11-06 11:10 u1
+
+25. /home/public/t2 디렉토리에 파일 생성
+     - u1 계정으로 작업
+	- 불가함 [o=r권한 필요]
+26. /home/public/u1 디렉토리에 디렉토리 생성
+     - t2 계정으로 작업
+	- 불가함 [o=x권한 필요]
+30. /home/public/t2 디렉토리에 기타사용자(other)에 대해 읽기, 쓰기 권한 추가 (문자로 지정)
+[t2@L1 public]$ chmod o+rw t2
+
+31. /home/public/u1 디렉토리에 기타사용자(other)에 대해 쓰기 권한 추가 (문자로 지정)
+[u1@L1 public]$ chmod o+w u1
+
+32. /home/public/t2 디렉토리에 파일 생성
+     - u1 계정으로 작업
+[t2@L1 u1]$ mkdir t2
+mkdir: `t2' 디렉토리를 만들 수 없습니다: 허가 거부
+	[기본그룹권한으로 접근해서 못함]
+
+33. /home/public/u1 디렉토리에 디렉토리 생성
+     - t2 계정으로 작업
+[t2@L1 u1]$ mkdir t2
+mkdir: `t2' 디렉토리를 만들 수 없습니다: 허가 거부
+	[기본그룹권한으로 접근해서 못함]
+
+34. /home/public에 test.sh 파일 생성
+     - t2계정으로 작업하고 다음 내용 입력
+	  #!/bin/bash
+          echo "Hello Linux World!! :)"
+
+35. /home/public/test.sh 파일의 권한 수정 (문자로 수정)
+     - rw-rw-r--
+[t2@L1 public]$ chmod a=rw,o-w test.sh
+
+36. /home/public/test.sh 파일 실행
+     - t2 계정으로 실행
+     - u1 계정으로 실행
+[t2@L1 public]$ ./test.sh
+-bash: ./test.sh: 허가 거부
+[u1@L1 public]$ ./test.sh
+-bash: ./test.sh: 허가 거부
+
+37. /home/public/test.sh 파일의 권한 수정 (숫자로 수정)
+     - rwxr--r--
+[t2@L1 public]$ chmod 744 test.sh
+
+38. /home/public/test.sh 파일 실행
+     - t2 계정으로 실행
+     - u1 계정으로 실행
+[t2@L1 public]$ ./test.sh
+Hello Linux World!! :)
+[u1@L1 public]$ ./test.sh
+-bash: ./test.sh: 허가 거부	// 그룹사용자 이기 때문에 그룹권한 수정이 필요
+
+39 /home/public/test.sh 파일에 other에 대한 실행권한 부여
+     - t2 계정으로 실행
+     - u1 계정으로 실행
+[t2@L1 public]$ chmod o+x test.sh
+
+[t2@L1 public]$ ./test.sh
+Hello Linux World!! :)
+
+[u1@L1 public]$ ./test.sh
+-bash: ./test.sh: 허가 거부	// 그룹사용자 이기 때문에 그룹권한에서 설정해줘야 함.
+
+40. /home/public/test.sh 파일을 t2의 홈디렉토리 하위의 Desktop으로 복사
+
+- t2 계정으로 작업
+[t2@L1 public]$ cp test.sh /home/t2/Desktop/
+[t2@L1 Desktop]$ ls -l
+합계 4
+-rwxr--r-x. 1 t2 linuxer 45 2015-11-06 11:30 test.sh
+
+
+
+
+
+
+
+

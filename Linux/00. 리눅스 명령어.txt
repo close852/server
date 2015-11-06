@@ -127,3 +127,90 @@ http://www.delmaster.net/183
 
 
 
+=================================================================================================
+/etc/shadow	: 비밀번호 DES로 암호화
+/etc/passwd	: 사용자 정보 저장
+/etc/group	: 사용자 그룹정보 저장
+/etc/shells	: 쉘 정보 확인 /bin/sh /bin/bash /bin/dash /bin/tcsh /bin/csh /sbin/nologin 
+/etc/skel	: 이 안에 있는 파일들이 사용자의 홈 디렉토리로 복사가 됨
+
+useradd		: 사용자 계정 생성
+usermod		: 사용자 세부 변경
+	-c	: 설명
+	-G	: 추가그룹
+	-g	: 기본그룹
+	
+	마지막에 로그인 이름
+
+
+
+
+userdel
+	-r	: 홈 디렉토리와 메일 스풀까지 삭제
+
+
+
+
+groupadd	: /etc/group 파일에 그룹을 추가하는 명령어
+	-g	: 기본 GID 설정 
+	-G	: 추가 GID 설정
+	
+	마지막에는 계정명
+
+groupmod 	:
+	-g	: gid 변경
+	-n	: 그룹명 변경
+
+
+groupdel	: 가입된 사용자가 없어야 삭제가 가능하다.
+
+
+
+
+chown	소유자
+chown		master 		*
+	
+chgrp	그룹
+chgrp -R 	master 		test
+
+chmod	퍼미션
+chmod	755	mater[file]
+
+umask		: dir 권한 필터
+
+
+
+
+
+
+
+
+mount [option] device directory
+	-a		: /etc/fstab의 모든 파일 시스템을 마운트 [파일시스템 테이블]
+	remount		: 
+	-o		: defaults : [rw exec nouser auto suid]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

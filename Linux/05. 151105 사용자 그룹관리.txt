@@ -1,0 +1,317 @@
+WINDOWS 사용자 와 그룹
+
+C:\Users\Administrator>whoami /user
+
+사용자 정보
+----------------
+
+사용자 이름       SID		(현재 OS식별을 위한 고유번호D1,D2,D3[OS 설치시 생성])
+================= ===========================================	
+pc2\administrator S-1-5-21-375754244-1389917198-909485584-500	
+			      D1	 D2	   D3	  RID[administrator 계정] 1000 ++;
+		
+
+계정 : master	[SID]	500 | 	SID 지우고 하드웨어 고유정보 지우고 - SysPrep
+그룹 : Users	[SID]
+----------------------
+Linux 사용자와 그룹
+
+계정 : master	[UID]	0   |	리눅스는 삭제해서 비면 들어가서 쓴다 UID/GID
+그룹 : master	[GID]
+----------------------
+/etc/passwd	|	/etc/group
+/etc/shadow
+ 사용자이름  UID GID 설명 디렉토리	쉘
+  1 root  :x:0  :0  :root:/root	      :/bin/bash
+ 34 master:x:500:500:    :/home/master:/bin/bash
+	패스워드
+
+
+/etc/shadow	: 비밀번호 DES로 암호화
+/etc/passwd	: 사용자 정보 저장
+/etc/group	: 사용자 그룹정보 저장
+/etc/shells	: 쉘 정보 확인 /bin/sh /bin/bash /bin/dash /bin/tcsh /bin/csh /sbin/nologin 
+/etc/skel	: 이 안에 있는 파일들이 사용자의 홈 디렉토리로 복사가 된
+
+passwd는 passwd [계정명] 으로 변경할것
+ -p옵션은 쓰면 평문으로 저장되고 로그인도 안됨.
+
+[root@L1 ~]# tail -1  /etc/passwd
+test:x:501:501:첫번째 생성 게정:/home/test:/bin/bash
+[root@L1 ~]# tail -1 /etc/shadow
+test:dkagh1234.:16744:0:99999:7:::
+
+[root@L1 ~]# useradd -c "첫번째 생성 게정" -p dkagh1234. "test"
+[root@L1 ~]# passwd test
+test 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 너무 단순/체계적입니다  
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+
+
+
+
+
+[root@L1 skel]# mkdir Apps Docs
+[root@L1 skel]# useradd "test3"
+[root@L1 skel]# cd /home/test3/
+[root@L1 test3]# ls -la
+합계 40
+drwx------. 6 test3 test3 4096 2015-11-05 10:46 .
+drwxr-xr-x. 7 root  root  4096 2015-11-05 10:46 ..
+-rw-r--r--. 1 test3 test3   18 2015-09-23 01:40 .bash_logout
+-rw-r--r--. 1 test3 test3  176 2015-09-23 01:40 .bash_profile
+-rw-r--r--. 1 test3 test3  124 2015-09-23 01:40 .bashrc
+-rw-r--r--. 1 test3 test3  500 2014-11-27 19:14 .emacs
+drwxr-xr-x. 2 test3 test3 4096 2010-11-12 10:04 .gnome2
+drwxr-xr-x. 4 test3 test3 4096 2015-10-30 23:57 .mozilla
+drwxr-xr-x. 2 test3 test3 4096 2015-11-05 10:45 Apps
+drwxr-xr-x. 2 test3 test3 4096 2015-11-05 10:45 Doks
+
+
+.exrc	: vi 편집기 설정
+.bashrc	: alias 
+
+
+[root@L1 ~]# userdel "test3"
+[root@L1 ~]#cd /home
+[root@L1 home]# ls -la | grep test3
+drwx------.  6    504    504 4096 2015-11-05 10:46 test3
+
+[root@L1 home]# useradd "test3"
+useradd: 경고: 홈디렉터리가 이미 있습니다.
+skel 디렉터리에서 파일을 복사하지 않습니다.
+메일함 파일을 만드는 중: 파일이 있습니다
+[root@L1 home]# userdel -r "test3"
+
+사용자에게 알림을 알려주는것.
+
+[root@L1 home]# cd /var/spool/mail/
+[root@L1 mail]# ls -l
+합계 4
+-rw-rw----. 1 master mail    0 2015-10-31 00:18 master
+-rw-------. 1 root   mail 2476 2015-11-05 10:34 root
+-rw-rw----. 1 rpc    mail    0 2015-10-30 23:59 rpc
+-rw-rw----. 1 test   mail    0 2015-11-05 10:33 test
+-rw-rw----. 1 test1  mail    0 2015-11-05 10:41 test1
+-rw-rw----. 1 test2  mail    0 2015-11-05 10:42 test2
+-rw-rw----. 1 test3  mail    0 2015-11-05 11:10 test3
+
+
+group의 기본그룹 -> /etc/passwd	: 
+group의 추가그룹 -> /etc/group	: 기본그롭은 안보인다!!
+
+
+기본 master / 추가 test
+
+[root@L1 home]# usermod -G "test" master
+[root@L1 home]# cat /etc/passwd | grep master
+master:x:500:500::/home/master:/bin/bash
+[root@L1 home]# cat /etc/group | tail -3
+master:x:500:
+test:x:501:master
+
+
+기본 test / 추가 master
+
+[root@L1 home]# usermod -g "test" -G "master" "master"
+[root@L1 home]# cat /etc/passwd | grep master
+master:x:500:501::/home/master:/bin/bash
+[root@L1 home]# cat /etc/group | grep 501
+test:x:501:
+[root@L1 home]# cat /etc/group | grep master
+master:x:500:master
+
+
+[root@L1 home]# id master
+uid=500(master) gid=501(test) groups=501(test),500(master)
+
+
+[root@L1 home]# useradd -c "강용석" -g "master" -G "test" -s "/bin/bash" "test2"
+[root@L1 home]# passwd test2
+test2 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 너무 단순/체계적입니다  
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+
+[root@L1 home]# cat /etc/passwd | grep test2
+test2:x:503:500:강용석:/home/test2:/bin/bash
+[root@L1 home]# cat /etc/group |grep 500
+master:x:500:master
+[root@L1 home]# id test2
+uid=503(test2) gid=500(master) groups=500(master),501(test)
+
+[root@L1 home]# useradd -c "김미나" -G "test" -s "/bin/bash" -u 1000 test3
+[root@L1 home]# id test3
+uid=1000(test3) gid=1000(test3) groups=1000(test3),501(test)
+
+
+[root@L1 home]# useradd test4
+[root@L1 home]# id test4
+uid=1001(test4) gid=1001(test4) groups=1001(test4)
+
+중간에 UID를 명시하면, 그 다음부터 생성된다
+
+[root@L1 home]# groupadd -g "1100" UTP
+[root@L1 home]# groupmod -g 1010 UTP
+[root@L1 home]# cat /etc/group | grep -i utp
+UTP:x:1010:
+
+
+[root@L1 home]# cat /etc/group | grep -i server
+Server:x:1202:
+[root@L1 home]# cat /etc/group | grep -i utp
+UTP:x:1010:
+
+[root@L1 home]# groupdel UTP 
+[root@L1 home]# cat /etc/group | grep -i utp
+[root@L1 home]# 
+
+	
+	### 실습
+
+[root@L1 home]# groupadd Sungnam
+[root@L1 home]# useradd -u 1105  -G master,test,test1 -s /bin/bash test100
+[root@L1 home]# passwd 
+
+ (test100의 사용자 정보 & 추가 그룹정보)
+[root@L1 home]# id test100
+uid=1105(test100) gid=1203(Sungnam) groups=1203(Sungnam),500(master),501(test),502(test1)
+
+ (test100의 그룹정보)
+[root@L1 home]# groups test100
+test100 : Sungnam master test test1
+
+ (test100의 기본 정보)
+[root@L1 home]# cat /etc/passwd | grep -i test100
+test100:x:1105:1203::/home/test100:/bin/bash
+
+ (test100의 기본 그룹 정보)
+[root@L1 home]# cat /etc/group | grep 1203
+Sungnam:x:1203:
+
+
+
+
+[root@L1 home]# groupdel test1
+groupdel: 'test1' 사용자의 주요 그룹을 제거할 수 없습니다
+[root@L1 home]# usermod -g test test1
+[root@L1 home]# groupdel test1
+
+계정정보변경 : usermod
+그룹정보변경 : groupmod
+
+소유자  변경 : chown test1 [변경할 소유자] test1[변경할 dir]
+소유그룹변경 : chgrp "master"[변경할 그룹] test1[변경할 dir]
+
+[root@L1 home]# chown master *		현재 디렉토리에 있는 모든파일 소유자 master변경
+[root@L1 home]# chgrp -R master test	test dir 안에 있는 모든 소유자 master로 변경
+
+
+ 레드햇 계열 config 파일
+[root@L1 test]# system-config-
+system-config-authentication  system-config-network-cmd
+system-config-date            system-config-network-tui
+system-config-firewall        system-config-printer
+system-config-firewall-tui    system-config-printer-applet
+system-config-kdump           system-config-services
+system-config-keyboard        system-config-users
+system-config-network         
+
+
+Permission 
+user	group	other
+rwx	rwx	rwx
+421	421	421
+
+chown	소유자
+chgrp	그룹
+chmod	퍼미션
+	 rwx 
+[test@L1 Test]$ chmod a=rwx ,go-w t.sh
+	a
+	u
+	o
+	g
+
+
+디렉토리 접근권한 : x(1)
+
+root 기준 - 
+	dir  755
+	파일 644
+
+사용자 기준
+	dir  775
+	파일 664
+
+--------------------------------------------------------------------------------
+	022 umask Default	변경가능
+
+dir 만들 때 , Permission 지정할 수 있다.
+
+4 2 1
+(1) sticky bit 그 소유자만 삭제할 수 있다. [디렉토리 하위 파일들]
+	공유폴더에 걸어줌.
+
+
+[root@L1 Test]# find / -perm +4000 -ls
+
+사용자 권한 있으면 
+rws
+사용자 권한 없으면 
+rwS
+
+
+[root@L1 Test]# chmod 4755 t.sh 
+-rwsr-xr-x. 1 test   test     19 2015-11-05 15:29 t.sh
+
+[root@L1 Test]# chmod 4655 t.sh 
+-rwSr-xr-x. 1 test   test     19 2015-11-05 15:29 t.sh
+
+[root@L1 Test]# chmod 2775 t.sh 
+-rwxrwsr-x. 1 test   test     19 2015-11-05 15:29 t.sh
+
+[root@L1 Test]# chmod 1755 t.sh 
+-rwxr-xr-t. 1 test   test     19 2015-11-05 15:29 t.sh
+
+[root@L1 Test]# chmod 1756 t.sh 
+-rwxr-xrwT. 1 test   test     19 2015-11-05 15:29 t.sh
+
+[root@L1 Test]# chmod 7755 t.sh
+-rwsr-sr-t. 1 test   test     19 2015-11-05 15:29 t.sh
+
+
+
+
+umask 없이 퍼미션 설정한 대로 만들고 싶을 때!
+mkdir -m 774 B
+drwxrwx---. 2 root   root   4096 2015-11-06 10:17 B
+
+[root@L1 Test]# mkdir -m 4755 G
+drwsr-xr-x. 2 root   root   4096 2015-11-06 10:21 G
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
