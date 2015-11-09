@@ -191,16 +191,37 @@ mount [option] device directory
 	-o		: defaults : [rw exec nouser auto suid]
 
 
+ps 프로세스 목록 보기
+	ps -aux
+	ps -ef
+
+	-a	모든 프로세스를 보여준다.
+	-x 	(zombie process)
+	-u	소유자 정보
+	-ww	커맨드라인 인자 표시
+
+	RSS
+	TTY
+	START
+	TIME
+	COMMAND
+
+chkconfig
+	 chkconfig --level 234 sshd off
+
+	chkconfig --level <런레벨> <서비스명> <on|off>
+	chkconfig <서비스명> <on|off>
+
+service
+	service --status-all
+	service <서비스명> <status|start|stop|restart>
 
 
+iptables 
+		-nvL
+		-I INPUT -p tcp -m state --state NEW --dport 5000 -j ACCEPT
 
-
-
-
-
-
-
-
+	service iptables save
 
 
 
