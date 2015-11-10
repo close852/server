@@ -9,7 +9,6 @@ vi /etc/inetd.conf
 
 cd /etc/sinet.d
 
-
 * xinetd를 통해 시작된 서비스 종료
 
 * 편집기를 통해 반영 할때     
@@ -292,7 +291,28 @@ Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
 
 
 [현재 상태에 반영!]
-[root@L1 ~]# iptables -I INPUT -p tcp -m state --state NEW --dport 5000 -j ACCEPT
+[root@L1 ~]# iptables -I INPUT 4 -p tcp -m state --state NEW --dport 5000 -j ACCEPT
+[root@L1 ~]# iptables -D 4
+[root@L1 ~]# service iptables save
+
+
+목적지가 80번인 것 드랍
+[root@L1 ~]# iptables -I OUTPUT -p tcp --dport 80 -j DROP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 iptables
@@ -314,27 +334,9 @@ http://www.delmaster.net/210
 http://www.ihd.or.kr/guidequestion.do
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+smbd	 : 
+nmbd	 : netBIOS 이름풀이
+winbindd : AD와 조인시켜주고 서비스를 실제 제공해주는 역할
 
 
 
