@@ -1,0 +1,369 @@
+[root@L1 ~]#  vi /etc/nsswitch.conf 
+[root@L1 ~]# vi /etc/resolv.conf
+
+[root@L1 home]# yum install openssl-devel bind
+
+/etc/sysconfig/named
+
+
+
+wget ftp://ftp.rs.internic.net/domain/named.cache
+dig . ns > ./named.dig
+
+[root@L1 named]# vi /etc/named.conf 
+
+
+[root@L1 named]# vi /etc/named.rfc1912.zones 
+
+ 14 zone "linux.vm" IN {
+ 15         type master;
+ 16         file "linux.vm.zone";
+ 17 };
+
+
+ 43 zone "100.168.192.in-addr.arpa" IN {
+ 44         type master;
+ 45         file "192.168.100.rev";
+ 46 };
+ 47 
+
+
+any로 변경
+ 10 options {
+ 11         listen-on port 53 { any; }; 
+ 12         listen-on-v6 port 53 { ::1; };
+ 13         directory       "/var/named";
+ 14         dump-file       "/var/named/data/cache_dump.db";
+ 15         statistics-file "/var/named/data/named_stats.txt";
+ 16         memstatistics-file "/var/named/data/named_mem_stats.txt";
+ 17         allow-query     { any; };
+ 18         recursion yes;
+
+iptables -I INPUT 4 -p tcp -m state --state NEW --dport 53 -j ACCEPT
+iptables -I INPUT 4 -p udp -m state --state NEW --dport 53 -j ACCEPT
+
+
+
+[root@L1 named]# cp named.localhost linux.vm.zone
+[root@L1 named]# vi linux.vm.zone
+  1 $TTL 86400
+  2 @       IN SOA  ns1.linux.vm.  root.linux.vm. (
+  3                                         2015111100      ; serial
+  4                                         15M     ; refresh
+  5                                         10M     ; retry
+  6                                         7D      ; expire
+  7                                         3H )    ; minimum
+  8         IN      NS      ns1.linux.vm.
+  9 ns1     IN      A       192.168.100.201
+ 10 L1      IN      A       192.168.100.201
+ 11 WWW     IN      CNAME   L1.linux.vm.
+ 12 mx1     IN      A       192.168.100.201
+ 13         IN      MX      10      mx1.linux.vm.
+
+
+
+
+
+전달자 : 외부와 내부를 단절시키기 위해서
+
+조건부 전달자 : 조건에 맞는 경우에만 전달
+
+
+
+###########################################################################
+
+BIND-Berkeley Internet Name Domain
+
+[블로그의 다른 글 참고]
+
+아래의 내용은 CentOS 6.6 BIND 9.8.2 구성에 대한 내용입니다.
+
+아래 예제에서 생성되는 zone : linux.vm
+
+보조 영역 구성에 대한 부분은 Windows Server DNS에 [windows.vm] 이라는 주영역을 만들어 두고 작업한 내용입니다.
+
+[설치]
+
+yum install openssl-devel bind*
+[BIND 샘플 파일]
+
+* /usr/share/doc/bind-9.8.2/sample/var/named
+
+[ROOT HINT 업데이트]
+
+아래 내용을 통해 다운로드 가능하며 /var/named  디렉토리에 받으면 됩니다.
+
+기본 파일명으로 [named.ca]를 사용하므로 다운 후 파일명 변경을 해줘야 합니다.
+
+업데이트 했다면 소유 그룹을 반드시 [named]로 변경해야 합니다. > chgpr named "named.ca"
+
+아래 두개중 아무거나 이용해도 됩니다.
+
+ [BIND 기본 설정 파일]
+  /etc/named.conf
+
+ [BIND zone 파일 지정]
+  /etc/named.rfc1912.zones
+
+[실제 zone 파일들]
+  /var/named/
+
+  Root Hint : named.ca (/etc/named.conf 파일에서 파일명 변경 가능)
+  정방향 zone 파일 (파일 정의는 /etc/named.rfc1912.zones)
+  역방향 zone 파일 (파일 정의는 /etc/named.rfc1912.zones)
+
+[일반 구성]
+
+/etc/named.conf
+
+options {
+        listen-on port 53 { any; };
+        listen-on-v6 port 53 { ::1; };
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        allow-query     { any; };
+        recursion yes;
+        forwarders { 168.126.63.1; 168.126.63.2; }; //전달자 구성
+        //forward only;
+        //forward first;
+        dnssec-enable yes;
+        dnssec-validation yes;
+        dnssec-lookaside auto;
+
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.iscdlv.key";
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+
+zone "." IN {
+        type hint;
+        file "named.ca";
+};
+
+zone "windows.vm" IN {
+        type slave;
+        file "slaves/windows.vm.slave";
+        masters { 192.168.100.101; };
+};
+
+zone "google.com" IN {             // 조건부 전달자 구성
+        type forward;
+        forwarders { 8.8.8.8; 8.8.4.4; };
+
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+/etc/named.rfc1912.zones
+
+//
+// Provided by Red Hat caching-nameserver package
+//
+// ISC BIND named zone configuration for zones recommended by
+// RFC 1912 section 4.1 : localhost TLDs and address zones
+// and http://www.ietf.org/internet-drafts/draft-ietf-dnsop-default-local-zones-02.txt
+// (c)2007 R W Franks
+//
+// See /usr/share/doc/bind*/sample/ for example named configuration files.
+//
+
+zone "linux.vm" IN {        //정방향 조회 영역 정의
+        type master;        //유형정의
+        file "linux.vm.zone";    //zone 파일명 정의
+        allow-update { none; };        //동적 업데이트
+        allow-transfer { none; };     //영역전송
+};
+
+zone "localhost" IN {
+        type master;
+        file "named.localhost";
+        allow-update { none; };
+};
+
+zone "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa" IN {
+        type master;
+        file "named.loopback";
+        allow-update { none; };
+};
+
+zone "100.168.192.in-addr.arpa" IN {        //역방향 조회 영역 정의
+        type master;
+        file "192.168.100.rev";
+        allow-update { none; };
+};
+
+zone "0.in-addr.arpa" IN {
+        type master;
+        file "named.empty";
+        allow-update { none; };
+};
+실제 작업할 파일 복사 및 퍼미션 변경
+
+cd /var/named
+
+cp named.localhost linux.vm.zone
+
+cp named.loopback 192.168.100.rev
+
+chgrp named *
+/var/named/linux.vm.zone
+
+$TTL 86400
+@       IN SOA  ns1.linux.vm. root.linux.vm. (
+                                        2015051501      ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+          IN      NS      ns1.linux.vm.
+
+          IN      A       192.168.100.201
+
+          IN      MX    10 mx1.linux.vm.
+
+$TTL 3600
+ns1     IN      A       192.168.100.201
+
+mx1     IN      A       192.168.100.201
+
+$TTL 600
+L1       IN      A       192.168.100.201
+www   IN      A       192.168.100.201
+
+linux    IN      CNAME      L1.linux.vm.
+/var/named/192.168.100.rev
+
+$TTL 1D
+@       IN SOA  ns.linux.vm. root.linux.vm. (
+                                        2015051501      ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+          IN      NS      ns.linux.vm.
+201     IN      PTR     ns.linux.vm.
+202     IN      PTR     L1.linux.vm.
+vi /etc/resolv.conf
+
+# Generated by NetworkManager
+search linux.vm
+nameserver 192.168.100.201
+[전달자 구성] /etc/named.conf파일의 option부분에 아래의 필요한 부분 추가
+
+forward first;
+
+forwarder { 168.126.63.1; 168.126.63.2; };
+
+forward only;
+[조건부 전달자 구성] /etc/named.conf파일의 아래쪽에 작성
+
+zone "google.com" IN {
+
+type forward;
+
+forwarders { 8.8.8.8; 8.8.4.4; };
+[모니터링]
+
+tail -f /var/log/messages
+[보조영역 구성] /etc/named.conf 파일의 아랫부분에 작성
+
+zone "windows.vm" IN {
+
+type slave;
+
+file "slaves/windows.vm.slave";
+
+masters { 192.168.100.101; };
+[AXFR IXFR]
+
+dig @<DNS서버FQDN or IP> <도메인명> <AXFR | IXFR>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[etc/dhcp/dhcpd.conf]
+
+
+max-lease-time 691200;
+
+subnet 192.168.100.0 netmask 255.255.255.0 {
+
+range 192.168.100.10 192.168.100.50;
+
+option routers 192.168.100.1;
+
+option broadcast-address 192.168.100.255;
+
+option domain-name-servers 168.126.63.1, 168.126.63.2;
+
+default-lease-time 691200;
+
+}
+
+
+
+[root@L1 named]# chkconfig dhcpd on
+
+
+[root@L1 named]# vi /etc/sysconfig/dhcpd
+  1 # Command line options here
+  2 DHCPDARGS=eth0
+
+
+host <예약이름> {
+
+hardware ethernet <MAC>;
+
+fixed-address <ip>;
+
+}
+
+[root@L1 named]# vi /etc/dhcp/dhcpd.conf 
+
+  1 max-lease-time 691200;
+  2 
+  3 subnet 192.168.100.0 netmask 255.255.255.0 {
+  4         range 192.168.100.10 192.168.100.50;
+  5         option routers 192.168.100.2;
+  6         option broadcast-address 192.168.100.255;
+  7         option domain-name-servers 192.168.100.201;
+  8         default-lease-time 691200;
+  9 }
+~        
+
+C:\Users\t1>ipconfig /renew
+
+Windows IP 구성
+
+인터페이스 Loopback Pseudo-Interface 1을(를) 해제하는 동안 오류가 발생했습니다.
+지정된 파일을 찾을 수 없습니다.
+
+
+이더넷 어댑터 로컬 영역 연결:
+
+   연결별 DNS 접미사. . . . :
+   링크-로컬 IPv6 주소 . . . . : fe80::a042:d7f9:abc7:f93%11
+   IPv4 주소 . . . . . . . . . : 192.168.100.60
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+   기본 게이트웨이 . . . . . . : 192.168.100.2
+
+터널 어댑터 isatap.{5D2E1CCA-1C48-4043-BA28-1DE5052B4EDA}:
+
+   미디어 상태 . . . . . . . . : 미디어 연결 끊김
+   연결별 DNS 접미사. . . . :
